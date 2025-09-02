@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 import { isUserAllowed } from '../../../lib/access';
 import { getMilestones, setMilestones, updateMilestone } from '../../../lib/milestones';
 
