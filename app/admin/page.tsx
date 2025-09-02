@@ -1,5 +1,5 @@
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../../lib/auth';
+import { authOptions } from '../api/auth/[...nextauth]/route';
 import { redirect } from 'next/navigation';
 import { addAdmin, isAdmin, listAdmins, getAllReportKeys, getAllUsernames, revokeAdmin, grantReportAccess, revokeReportAccess } from '../../lib/access';
 import { revalidatePath } from 'next/cache';

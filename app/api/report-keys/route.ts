@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../../../lib/auth';
+import { authOptions } from '../auth/[...nextauth]/route';
 import { listReportKeysForUser } from '../../../lib/access.ts';
 
 export const dynamic = 'force-dynamic';

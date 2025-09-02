@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../../../lib/auth';
+import { authOptions } from '../auth/[...nextauth]/route';
 import { addComment, getComments } from '../../../lib/comments';
 import { isUserAllowed } from '../../../lib/access';
 

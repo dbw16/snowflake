@@ -45,7 +45,7 @@ const Comments: React.FC<CommentsProps> = ({ trackId, milestone, signalIndex = n
   const [composerOpen, setComposerOpen] = React.useState(false);
 
   const fetchComments = React.useCallback(async () => {
-    const params = new URLSearchParams({ trackId, milestone: String(milestone), reportKey, username: authorName || '' });
+    const params = new URLSearchParams({ trackId, milestone: String(milestone), reportKey, username: authorName });
     if (signalIndex !== null && signalIndex !== undefined) {
       params.set('signalIndex', String(signalIndex));
     }
