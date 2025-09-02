@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from '../../../lib/auth';
 import { getArchivedByReportKey, setArchivedByReportKey, updateArchivedTrack } from '../../../lib/archived.ts';
 import { isUserAllowed } from '../../../lib/access.ts';
 

@@ -144,7 +144,6 @@ class Track extends React.Component<TrackProps> {
                       trackId={this.props.trackId}
                       milestone={currentMilestoneId}
                       signalIndex={i}
-                      authorName={this.props.authorName}
                       reportKey={this.props.reportKey}
                     />
                   </div>
