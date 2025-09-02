@@ -1,0 +1,178 @@
+'use client';
+
+import * as d3 from 'd3';
+import {
+  pointsToLevels,
+  categoryPointsFromMilestoneMap,
+  categoryColorScale,
+  categoryIds,
+  MilestoneMap,
+  Milestone,
+} from '../constants.ts';
+import React from 'react';
+
+interface CategoryPoint {
+  categoryId: string;
+  points: number;
+}
+
+interface LevelThermometerProps {
+  milestoneByTrack: MilestoneMap;
+}
+
+const margins = {
+  top: 30,
+  right: 20,
+  bottom: 30,
+  left: 10,
+};
+const height = 150;
+const width = 550;
+
+class LevelThermometer extends React.Component<LevelThermometerProps> {
+  pointScale: d3.ScaleLinear<number, number>;
+  topAxisFn: d3.Axis<d3.NumberValue>;
+  bottomAxisFn: d3.Axis<d3.NumberValue>;
+  topAxis: SVGGElement | null;
+  bottomAxis: SVGGElement | null;
+
+  constructor(props: LevelThermometerProps) {
+    super(props);
+
+    this.pointScale = d3
+      .scaleLinear()
+      .domain([0, 135])
+      .rangeRound([0, width - margins.left - margins.right]);
+    this.topAxisFn = d3
+      .axisTop(this.pointScale)
+      .tickValues(Object.keys(pointsToLevels).map(Number))
+      .tickFormat((points: d3.NumberValue) => pointsToLevels[points as number]);
+    this.bottomAxisFn = d3
+      .axisBottom(this.pointScale)
+      .tickValues(Object.keys(pointsToLevels).map(Number));
+    this.topAxis = null;
+    this.bottomAxis = null;
+  }
+
+  componentDidMount() {
+    if (this.topAxis) {
+      d3.select(this.topAxis)
+        .call(this.topAxisFn)
+        .selectAll('text')
+        .attr('y', 0)
+        .attr('x', -25)
+        .attr('transform', 'rotate(90)')
+        .attr('dy', '.35em')
+        .style('font-size', '12px')
+        .style('text-anchor', 'start');
+    }
+    if (this.bottomAxis) {
+      d3.select(this.bottomAxis)
+        .call(this.bottomAxisFn)
+        .selectAll('text')
+        .attr('y', 0)
+        .attr('x', 10)
+        .attr('transform', 'rotate(90)')
+        .attr('dy', '.35em')
+        .style('font-size', '12px')
+        .style('text-anchor', 'start');
+    }
+  }
+
+  rightRoundedRect(x: number, y: number, width: number, height: number, radius: number): string {
+    return (
+      'M' +
+      x +
+      ',' +
+      y +
+      'h' +
+      (width - radius) +
+      'a' +
+      radius +
+      ',' +
+      radius +
+      ' 0 0 1 ' +
+      radius +
+      ',' +
+      radius +
+      'v' +
+      (height - 2 * radius) +
+      'a' +
+      radius +
+      ',' +
+      radius +
+      ' 0 0 1 ' +
+      -radius +
+      ',' +
+      radius +
+      'h' +
+      (radius - width) +
+      'z'
+    );
+  }
+  render() {
+    let categoryPoints = categoryPointsFromMilestoneMap(this.props.milestoneByTrack);
+    let lastCategoryIndex = 0;
+    categoryPoints.forEach((categoryPoint, i) => {
+      if (categoryPoint.points) lastCategoryIndex = i;
+    });
+    let cumulativePoints = 0;
+    return (
+      <figure>
+        <style jsx>{`
+          figure {
+            margin: 0 0 0 -10px;
+          }
+          svg {
+            width: ${width}px;
+            height: ${height + 10}px;
+          }
+        `}</style>
+        <svg>
+          <g transform={`translate(${margins.left},${margins.top})`}>
+            {categoryPoints.map((categoryPoint, i) => {
+              const x = this.pointScale(cumulativePoints);
+              const width = this.pointScale(cumulativePoints + categoryPoint.points) - x;
+              cumulativePoints += categoryPoint.points;
+              return i != lastCategoryIndex ? (
+                <rect
+                  key={categoryPoint.categoryId}
+                  x={x}
+                  y={0}
+                  width={width}
+                  height={height - margins.top - margins.bottom}
+                  style={{
+                    fill: categoryColorScale(categoryPoint.categoryId),
+                    borderRight: '1px solid #000',
+                  }}
+                />
+              ) : (
+                <path
+                  key={categoryPoint.categoryId}
+                  d={this.rightRoundedRect(x, 0, width, height - margins.top - margins.bottom, 3)}
+                  style={{ fill: categoryColorScale(categoryPoint.categoryId) }}
+                />
+              );
+            })}
+            <g
+              ref={(ref: SVGGElement | null) => {
+                this.topAxis = ref;
+              }}
+              className="top-axis"
+              transform={`translate(0, -2)`}
+            />
+            <g
+              ref={(ref: SVGGElement | null) => {
+                this.bottomAxis = ref;
+              }}
+              className="bottom-axis"
+              transform={`translate(0,${height - margins.top - margins.bottom + 1})`}
+            />
+          </g>
+        </svg>
+      </figure>
+    );
+  }
+}
+
+export default LevelThermometer;

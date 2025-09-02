@@ -1,4 +1,5 @@
 ## ⚠️ Heads up: Medium isn’t using this tool anymore, but you’re welcome to!
+
 [Read more about our current thinking around engineer growth](https://medium.engineering/engineering-growth-at-medium-4935b3234d25).
 
 # Snowflake
@@ -36,5 +37,5 @@ This will put a static version of the site in `out/`.
 
 ## Future work
 
-* Load initial data from a file, to improve flexibility.
-* Add restricted job title selection and validation.
+- Load initial data from a file, to improve flexibility.
+- Add restricted job title selection and validation.
