@@ -1,7 +1,7 @@
 import { type AuthOptions } from 'next-auth';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { getOrCreateUser } from '@/lib/access';
+import { getOrCreateUser } from './access';
 
 const providers = [];
 

@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from '../../../lib/auth';
 import { addAdmin, isAdmin, listAdmins } from '../../../lib/access';
 
 export const dynamic = 'force-dynamic';
