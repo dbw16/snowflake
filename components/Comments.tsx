@@ -45,11 +45,15 @@ const Comments: React.FC<CommentsProps> = ({ trackId, milestone, signalIndex = n
   const [composerOpen, setComposerOpen] = React.useState(false);
 
   const fetchComments = React.useCallback(async () => {
-    const params = new URLSearchParams({ trackId, milestone: String(milestone), reportKey, username: authorName });
-    if (signalIndex !== null && signalIndex !== undefined) {
-      params.set('signalIndex', String(signalIndex));
+    const params: Record<string, string> = { trackId, milestone: String(milestone), reportKey };
+    if (authorName) {
+      params.username = authorName;
     }
-    const res = await fetch(`/api/comments?${params.toString()}`, { cache: 'no-store' });
+    const searchParams = new URLSearchParams(params);
+    if (signalIndex !== null && signalIndex !== undefined) {
+      searchParams.set('signalIndex', String(signalIndex));
+    }
+    const res = await fetch(`/api/comments?${searchParams.toString()}`);
     if (res.ok) {
       const data = await res.json();
       setItems(data.comments || []);
