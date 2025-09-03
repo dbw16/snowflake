@@ -60,14 +60,10 @@ This modernized version features:
    NEXTAUTH_SECRET=your-random-secret-here
    ```
 
-4. **Initialize the database (automatic in dev)**:
-   By default (when `NODE_ENV=development`) the app will auto-run migrations on startup using `instrumentation.ts`. Just run the dev server (next step) and the database + tables will be created if they don't exist.
-
-   If you prefer to initialize manually or you're in production:
+4. **Initialize the database**:
    ```bash
-   npm run drizzle:push   # Creates tables to match current schema (development convenience)
-   # OR (recommended for production / CI controlled changes)
-   npm run drizzle:migrate
+   mkdir -p data
+   npm run drizzle:push
    ```
 
 5. **Start the development server**:
@@ -180,9 +176,9 @@ npm run test         # Run unit tests
 npm run test:watch   # Run tests in watch mode
 ```
 
-### Database Schema & Startup
+### Database Schema
 
-The application uses a simplified database schema handled by **Drizzle ORM** migrations. On server startup we ensure the schema exists.
+The application uses a simplified database schema:
 
 - **users**: User accounts (username as primary key)
 - **user_roles**: Role assignments (admin, user, etc.)
@@ -191,73 +187,6 @@ The application uses a simplified database schema handled by **Drizzle ORM** mig
 - **report_milestones**: User milestone progress
 
 Each user implicitly owns one report with their username as the key.
-
-#### Automatic Database Initialization
-
-We leverage Next.js `instrumentation.ts` to run once at server start and execute any pending migrations. Behavior is controlled via environment variables:
-
-| Variable | Values | Default | Meaning |
-|----------|--------|---------|---------|
-| `DB_AUTO_MIGRATE` | `true` / `false` | (dev: `true`, prod: `false`) | Run migrations automatically on startup |
-| `DATABASE_PATH` | path | `data/app.sqlite3` | SQLite file location |
-| `DB_MIGRATIONS_DIR` | path | `./drizzle` | Folder containing Drizzle migration files |
-
-In development you get auto-migrations without extra steps. In production you should typically run migrations in CI/CD before starting the app (see below) and keep `DB_AUTO_MIGRATE=false` to avoid write conflicts or cold start latency.
-
-#### Manual / CI Migration Workflow
-
-Recommended production sequence:
-1. Generate migration(s) from schema changes: `npm run drizzle:generate`
-2. Commit the generated SQL under `drizzle/`
-3. Apply migrations during deployment: `npm run drizzle:migrate`
-4. Start app with `DB_AUTO_MIGRATE=false` (default in prod) and `next start`
-
-#### One-off Ensure (useful in scripts/tests)
-
-```bash
-npm run db:ensure   # uses tsx to run TypeScript directly
-```
-Runs the same initialization logic explicitly (safe / idempotent).
-
-#### When to Use `push` vs `generate/migrate`
-
-| Command | Use Case | Notes |
-|---------|----------|-------|
-| `drizzle:push` | Rapid dev prototyping | Directly syncs schema; not intended for production history |
-| `drizzle:generate` + `drizzle:migrate` | Stable, reviewable changes | Produces versioned migration SQL committed to VCS |
-
-Avoid mixing `push` and generated migrations on the same database without resetting.
-
-### Evolving the Schema (Step-by-Step)
-
-1. Edit `lib/schema.ts`
-2. Generate a migration: `npm run drizzle:generate`
-3. Review the SQL files in `drizzle/` (ensure no destructive changes slipped in)
-4. Apply locally: `npm run drizzle:migrate`
-5. Run tests: `npm test`
-6. Commit both the schema change and migration files
-7. In CI/prod deploy pipeline run `npm run drizzle:migrate` before starting the app
-
-If you just want a quick local reset during experimentation:
-```bash
-rm -f data/app.sqlite3
-npm run drizzle:push
-```
-Then (optional) seed or re-init admin.
-
-### Concurrency & Serverless Notes
-
-SQLite + runtime migrations are fine for a single Node server. In serverless (multiple cold starts) concurrent migration attempts can race. Mitigations:
-* Prefer running migrations in CI (disable auto via `DB_AUTO_MIGRATE=false`)
-* Or move to a central RDBMS (e.g. Postgres) with migration locking if you scale horizontally
-
-### Upgrading / Rolling Back
-
-Drizzle currently focuses on forward migrations. To roll back, you typically:
-1. Restore from backup (ensure you snapshot before applying prod migrations)
-2. Or craft a manual reverse SQL migration
-
-Always back up `data/app.sqlite3` before applying production migrations.
 
 ### Authentication Flow
 
@@ -311,12 +240,10 @@ NEXTAUTH_SECRET=your-production-secret
 
 ### Database Setup
 
-The SQLite database is created in the `data/` directory (or `DATABASE_PATH`). Production checklist:
-1. Ensure directory exists & writable (init script / container entrypoint)
-2. Run `npm run drizzle:migrate` (CI/CD step) BEFORE `next start`
-3. Keep `DB_AUTO_MIGRATE=false` unless you explicitly want runtime migrations
-4. Back up the file regularly (volume snapshot, cron copy, etc.)
-5. Consider migrating to Postgres if you need high concurrency or cloud scaling; Drizzle supports that with minimal code changes
+The SQLite database is created in the `data/` directory. For production, ensure:
+1. The `data/` directory exists and is writable
+2. Database is backed up regularly
+3. Consider migration to PostgreSQL for high-scale deployments
 
 ## 🔒 Security
 
@@ -388,50 +315,3 @@ For questions, issues, or contributions:
 ---
 
 **Note**: This is a modernized fork of Medium's Snowflake tool. While Medium is no longer actively using this tool, the career development framework remains valuable for engineering organizations.
-
----
-
-### Appendix: Startup Flow Summary
-
-1. Next.js loads `instrumentation.ts` and calls `register()`
-2. If auto-migrate enabled, `ensureDatabase()` runs migrations once per process
-3. Server components & route handlers import `lib/db.ts` and reuse the ready connection
-4. First admin can be initialized via `/api/init-admin`
-
-To disable runtime migrations entirely set:
-```env
-DB_AUTO_MIGRATE=false
-```
-
-To force them even in production (use cautiously):
-```env
-DB_AUTO_MIGRATE=true
-```
-
-
-
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
-import Database from 'better-sqlite3';
-import { mkdirSync } from 'fs';
-import { dirname } from 'path';
-
-const DB_PATH = process.env.DATABASE_PATH || 'data/app.sqlite3';
-
-export async function setupDatabase() {
-  try {
-    // Ensure the directory for the database exists
-    mkdirSync(dirname(DB_PATH), { recursive: true });
-
-    const sqlite = new Database(DB_PATH);
-    const db = drizzle(sqlite);
-
-    console.log('Running database migrations...');
-    await migrate(db, { migrationsFolder: './drizzle' });
-    console.log('Database migrations completed.');
-
-  } catch (error) {
-    console.error('Database setup failed:', error);
-    process.exit(1);
-  }
-}
