@@ -1,12 +1,7 @@
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import Database from 'better-sqlite3';
 import { comments as commentsTable, users } from './schema';
 import { and, eq, isNull, asc } from 'drizzle-orm';
 import { getOrCreateUser } from './access';
-
-// Simple database connection
-const sqlite = new Database('data/app.sqlite3');
-const db = drizzle(sqlite, { schema: { comments: commentsTable, users } });
+import { db } from './db';
 
 export interface CommentRecord {
   id: string;

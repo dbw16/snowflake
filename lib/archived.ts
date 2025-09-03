@@ -1,12 +1,7 @@
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import Database from 'better-sqlite3';
 import { archived as archivedTable } from './schema';
-import { and, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { getOrCreateUser } from './access';
-
-// Simple database connection
-const sqlite = new Database('data/app.sqlite3');
-const db = drizzle(sqlite, { schema: { archived: archivedTable } });
+import { db } from './db';
 
 export interface ArchivedLevelsMap {
   [trackId: string]: { [milestone: string]: boolean } | boolean; // boolean for backward-compat
