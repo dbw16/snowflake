@@ -20,9 +20,14 @@
     "drizzle:migrate": "drizzle-kit migrate",
     "drizzle:push": "drizzle-kit push",
     "drizzle:push:e2e": "drizzle-kit push --config=drizzle.e2e.config.ts",
+    "test:e2e:setup": "drizzle-kit push --config=drizzle.e2e.config.ts",
     "test:e2e": "playwright test --workers=1",
     "test:e2e:headed": "playwright test --headed --workers=1",
-    "test:e2e:debug": "playwright test --headed --workers=1 --debug"
+    "test:e2e:debug": "playwright test --headed --workers=1 --debug",
+    "db:generate": "bash scripts/db-generate.sh",
+    "db:migrate": "bash scripts/db-migrate.sh",
+    "db:reset": "bash scripts/db-reset.sh",
+    "db:status": "node scripts/db-status.cjs"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.10.0",

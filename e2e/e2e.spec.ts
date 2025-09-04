@@ -49,13 +49,14 @@ test('admin can add and remove admins', async ({ page, context }) => {
   expect(newAdminRole.length).toBeGreaterThan(0);
 
   // Fill in revoke and hit enter
+  await page.waitForTimeout(100); // wait for db write
   await page.getByPlaceholder('Select an admin to revoke').fill('user1');
+  await page.waitForTimeout(100); // wait for db write
   await page.getByPlaceholder('Select an admin to revoke').press('Enter');
-  await page.getByPlaceholder('Select an admin to revoke').press('Escape');
 
 
   // Check user is now in the list of admins
-  await page.waitForTimeout(500); // wait for db write
+  await page.waitForTimeout(100); // wait for db write
   const revokedAdminRole = await db.select().from(userRoles).where(eq(userRoles.userId, 'user1')).limit(1);
   expect(revokedAdminRole.length).toEqual(0);
 });

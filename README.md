@@ -159,10 +159,12 @@ npm run dev          # Start development server
 npm run build        # Build for production
 npm run start        # Start production server
 
-# Database
-npm run drizzle:generate  # Generate migrations
-npm run drizzle:migrate   # Run migrations
-npm run drizzle:push      # Push schema to database
+# Database (Drizzle / SQLite)
+npm run db:generate   # Generate a migration from schema changes
+npm run db:migrate    # Apply pending migrations
+npm run db:status     # Show applied vs pending migrations
+npm run db:reset      # Delete local DB & re-apply migrations (destructive)
+npm run drizzle:push  # Directly push current schema (no new migration file)
 
 # Code Quality
 npm run lint         # Run ESLint
@@ -178,7 +180,7 @@ npm run test:watch   # Run tests in watch mode
 
 ### Database Schema
 
-The application uses a simplified database schema:
+The application uses a simplified database schema (managed with Drizzle migrations):
 
 - **users**: User accounts (username as primary key)
 - **user_roles**: Role assignments (admin, user, etc.)
@@ -187,6 +189,24 @@ The application uses a simplified database schema:
 - **report_milestones**: User milestone progress
 
 Each user implicitly owns one report with their username as the key.
+
+### Database & Migration Management
+
+See `docs/DATABASE.md` for full details.
+
+Common tasks:
+
+```bash
+# After editing lib/schema.ts
+npm run db:generate   # create migration file
+npm run db:migrate    # apply it
+
+# Fresh setup
+npm run db:migrate    # or: npm run drizzle:push
+
+# Inspect status
+npm run db:status
+```
 
 ### Authentication Flow
 

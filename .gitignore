@@ -239,9 +239,7 @@ sketch
 # End of https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,node,react,nextjs
 
 data/*
-drizzle/**/*
 .playwright-mcp/
-drizzle/0000_known_newton_destine.sql
 tsconfig.tsbuildinfo
 *.sqlite3
 playwright-report
