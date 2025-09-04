@@ -1,4 +1,4 @@
-// @flow
+'use client'
 
 import TrackSelector from '../components/TrackSelector'
 import NightingaleChart from '../components/NightingaleChart'
@@ -12,14 +12,14 @@ import type { Milestone, MilestoneMap, TrackId } from '../constants'
 import React from 'react'
 import TitleSelector from '../components/TitleSelector'
 
-type SnowflakeAppState = {
-  milestoneByTrack: MilestoneMap,
-  name: string,
-  title: string,
-  focusedTrackId: TrackId,
+interface SnowflakeAppState {
+  milestoneByTrack: MilestoneMap
+  name: string
+  title: string
+  focusedTrackId: TrackId
 }
 
-const hashToState = (hash: String): ?SnowflakeAppState => {
+const hashToState = (hash: string): SnowflakeAppState | null => {
   if (!hash) return null
   const result = defaultState()
   const hashValues = hash.split('#')[1].split(',')
@@ -99,7 +99,7 @@ const defaultState = (): SnowflakeAppState => {
 
 const stateToHash = (state: SnowflakeAppState) => {
   if (!state || !state.milestoneByTrack) return null
-  const values = trackIds.map(trackId => state.milestoneByTrack[trackId]).concat(encodeURI(state.name), encodeURI(state.title))
+  const values = (trackIds.map(trackId => state.milestoneByTrack[trackId]) as any[]).concat(encodeURI(state.name), encodeURI(state.title))
   return values.join(',')
 }
 
@@ -239,7 +239,7 @@ class SnowflakeApp extends React.Component<Props, SnowflakeAppState> {
     let milestone = prevMilestone + delta
     if (milestone < 0) milestone = 0
     if (milestone > 5) milestone = 5
-    this.handleTrackMilestoneChange(this.state.focusedTrackId, ((milestone: any): Milestone))
+    this.handleTrackMilestoneChange(this.state.focusedTrackId, milestone as Milestone)
   }
 
   setTitle(title: string) {

@@ -1,5 +1,3 @@
-// @flow
-
 import React from 'react'
 import * as d3 from 'd3'
 import { trackIds, milestones, tracks, categoryColorScale } from '../constants'
@@ -8,10 +6,10 @@ import type { TrackId, Milestone, MilestoneMap } from '../constants'
 const width = 400
 const arcMilestones = milestones.slice(1) // we'll draw the '0' milestone with a circle, not an arc.
 
-type Props = {
-  milestoneByTrack: MilestoneMap,
-  focusedTrackId: TrackId,
-  handleTrackMilestoneChangeFn: (TrackId, Milestone) => void
+interface Props {
+  milestoneByTrack: MilestoneMap
+  focusedTrackId: TrackId
+  handleTrackMilestoneChangeFn: (trackId: TrackId, milestone: Milestone) => void
 }
 
 class NightingaleChart extends React.Component<Props> {
@@ -19,20 +17,20 @@ class NightingaleChart extends React.Component<Props> {
   radiusScale: any
   arcFn: any
 
-  constructor(props: *) {
+  constructor(props: Props) {
     super(props)
 
     this.colorScale = d3.scaleSequential(d3.interpolateWarm)
       .domain([0, 5])
 
     this.radiusScale = d3.scaleBand()
-      .domain(arcMilestones)
+      .domain(arcMilestones.map(String))
       .range([.15 * width, .45 * width])
       .paddingInner(0.1)
 
     this.arcFn = d3.arc()
-      .innerRadius(milestone => this.radiusScale(milestone))
-      .outerRadius(milestone => this.radiusScale(milestone) + this.radiusScale.bandwidth())
+      .innerRadius((d: any) => this.radiusScale(d) || 0)
+      .outerRadius((d: any) => (this.radiusScale(d) || 0) + this.radiusScale.bandwidth())
       .startAngle(- Math.PI / trackIds.length)
       .endAngle(Math.PI / trackIds.length)
       .padAngle(Math.PI / 200)
@@ -75,16 +73,16 @@ class NightingaleChart extends React.Component<Props> {
                       <path
                           key={milestone}
                           className={'track-milestone ' + (isMet ? 'is-met ' : ' ') + (isCurrentMilestone ? 'track-milestone-current' : '')}
-                          onClick={() => this.props.handleTrackMilestoneChangeFn(trackId, milestone)}
-                          d={this.arcFn(milestone)}
-                          style={{fill: isMet ? categoryColorScale(tracks[trackId].category) : undefined}} />
+                          onClick={() => this.props.handleTrackMilestoneChangeFn(trackId, milestone as Milestone)}
+                          d={this.arcFn(milestone.toString())}
+                          style={{fill: isMet ? categoryColorScale(tracks[trackId].category) as string : undefined}} />
                     )
                   })}
                   <circle
                       r="8"
                       cx="0"
                       cy="-50"
-                      style={{fill: categoryColorScale(tracks[trackId].category)}}
+                      style={{fill: categoryColorScale(tracks[trackId].category) as string}}
                       className={"track-milestone " + (isCurrentTrack && !currentMilestoneId ? "track-milestone-current" : "")}
                       onClick={() => this.props.handleTrackMilestoneChangeFn(trackId, 0)} />
                 </g>
