@@ -1,7 +1,7 @@
 import React from 'react'
 import * as d3 from 'd3'
 import { trackIds, milestones, tracks, categoryColorScale } from '../constants'
-import type { TrackId, Milestone, MilestoneMap } from '../constants'
+import type { TrackId, MilestoneMap } from '../constants'
 
 const width = 400
 const arcMilestones = milestones.slice(1) // we'll draw the '0' milestone with a circle, not an arc.
@@ -9,7 +9,6 @@ const arcMilestones = milestones.slice(1) // we'll draw the '0' milestone with a
 interface Props {
   milestoneByTrack: MilestoneMap
   focusedTrackId: TrackId
-  handleTrackMilestoneChangeFn: (trackId: TrackId, milestone: Milestone) => void
 }
 
 class NightingaleChart extends React.Component<Props> {
@@ -52,9 +51,8 @@ class NightingaleChart extends React.Component<Props> {
           }
           .track-milestone {
             fill: #eee;
-            cursor: pointer;
           }
-          .track-milestone-current, .track-milestone:hover {
+          .track-milestone-current {
             stroke: #000;
             stroke-width: 4px;
             stroke-linejoin: round;
@@ -73,7 +71,6 @@ class NightingaleChart extends React.Component<Props> {
                       <path
                           key={milestone}
                           className={'track-milestone ' + (isMet ? 'is-met ' : ' ') + (isCurrentMilestone ? 'track-milestone-current' : '')}
-                          onClick={() => this.props.handleTrackMilestoneChangeFn(trackId, milestone as Milestone)}
                           d={this.arcFn(milestone.toString())}
                           style={{fill: isMet ? categoryColorScale(tracks[trackId].category) as string : undefined}} />
                     )
@@ -83,8 +80,7 @@ class NightingaleChart extends React.Component<Props> {
                       cx="0"
                       cy="-50"
                       style={{fill: categoryColorScale(tracks[trackId].category) as string}}
-                      className={"track-milestone " + (isCurrentTrack && !currentMilestoneId ? "track-milestone-current" : "")}
-                      onClick={() => this.props.handleTrackMilestoneChangeFn(trackId, 0)} />
+                      className={"track-milestone " + (isCurrentTrack && !currentMilestoneId ? "track-milestone-current" : "")} />
                 </g>
             )})}
           </g>
