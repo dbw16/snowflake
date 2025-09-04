@@ -1,13 +1,11 @@
-// @flow
-
 import React from 'react'
 import { eligibleTitles } from '../constants'
 import type { MilestoneMap } from '../constants'
 
-type Props = {
-  milestoneByTrack: MilestoneMap,
-  currentTitle: string,
-  setTitleFn: (string) => void
+interface Props {
+  milestoneByTrack: MilestoneMap
+  currentTitle: string
+  setTitleFn: (title: string) => void
 }
 
 class TitleSelector extends React.Component<Props> {

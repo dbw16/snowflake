@@ -1,10 +1,10 @@
-// @flow
 import * as d3 from 'd3'
 
 export type TrackId = 'MOBILE' | 'WEB_CLIENT' | 'FOUNDATIONS' | 'SERVERS' |
   'PROJECT_MANAGEMENT' | 'COMMUNICATION' | 'CRAFT' | 'INITIATIVE' |
   'CAREER_DEVELOPMENT' | 'ORG_DESIGN' | 'WELLBEING' | 'ACCOMPLISHMENT' |
   'MENTORSHIP' | 'EVANGELISM' | 'RECRUITING' | 'COMMUNITY'
+
 export type Milestone = 0 | 1 | 2 | 3 | 4 | 5
 
 export type MilestoneMap = {
@@ -61,7 +61,7 @@ export const maxLevel = 135
 
 export type Track = {
   displayName: string,
-  category: string, // TK categoryId type?
+  category: string,
   description: string,
   milestones: {
     summary: string,
@@ -70,7 +70,7 @@ export type Track = {
   }[]
 }
 
-type Tracks = {|
+type Tracks = {
   'MOBILE': Track,
   'WEB_CLIENT': Track,
   'FOUNDATIONS': Track,
@@ -87,7 +87,7 @@ type Tracks = {|
   'EVANGELISM': Track,
   'RECRUITING': Track,
   'COMMUNITY': Track
-|}
+}
 
 export const tracks: Tracks = {
   "MOBILE": {
@@ -1163,12 +1163,12 @@ export const tracks: Tracks = {
   },
 }
 
-export const trackIds: TrackId[] = Object.keys(tracks)
+export const trackIds: TrackId[] = Object.keys(tracks) as TrackId[]
 
 export const categoryIds: Set<string> = trackIds.reduce((set, trackId) => {
   set.add(tracks[trackId].category)
   return set
-}, new Set())
+}, new Set<string>())
 
 export const categoryPointsFromMilestoneMap = (milestoneMap: MilestoneMap) => {
   let pointsByCategory = new Map()
