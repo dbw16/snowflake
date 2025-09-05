@@ -76,7 +76,7 @@ class NightingaleChart extends React.Component<Props> {
                           key={milestone}
                           className={'track-milestone ' + (isMet ? 'is-met ' : ' ') + (isCurrentMilestone ? 'track-milestone-current' : '')}
                           d={arcFn(milestone as any) as string}
-                          style={{fill: isMet ? categoryColorScale(getTrackFromAnyRole(trackId).category) as string : undefined}} />
+                          style={{fill: isMet ? categoryColorScale(getTrackFromAnyRole(trackId).category) as string : '#ccc'}} />
                     )
                   })}
                   <circle
