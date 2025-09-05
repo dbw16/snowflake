@@ -17,11 +17,19 @@ interface SnowflakeAppState {
   focusedTrackId: TrackId
 }
 
-const hashToState = (hash: string): SnowflakeAppState | null => {
+export const coerceMilestone = (value: number): Milestone => {
+  if (value < 0) return 0
+  if (value > 5) return 5
+  return Math.round(value) as Milestone
+}
+
+
+export const hashToState = (hash: string): SnowflakeAppState | null => {
   if (!hash) return null
   const result = defaultState()
-  const hashValues = hash.split('#')[1].split(',')
-  if (!hashValues) return null
+  const hashValues = hash.replace(/^#/, '').split(',') // remove leading '#' and split by ','
+  if (!hashValues || hashValues.length < 18) return null
+
   trackIds.forEach((trackId, i) => {
     result.milestoneByTrack[trackId] = coerceMilestone(Number(hashValues[i]))
   })
@@ -30,7 +38,7 @@ const hashToState = (hash: string): SnowflakeAppState | null => {
   return result
 }
 
-const emptyState = (): SnowflakeAppState => {
+export const emptyState = (): SnowflakeAppState => {
   return {
     name: '',
     title: '',
@@ -56,7 +64,7 @@ const emptyState = (): SnowflakeAppState => {
   }
 }
 
-const defaultState = (): SnowflakeAppState => {
+export const defaultState = (): SnowflakeAppState => {
   return {
     name: 'Cersei Lannister',
     title: 'Staff Engineer',
