@@ -1,7 +1,8 @@
 import * as d3 from 'd3'
-import { pointsToLevels, categoryPointsFromMilestoneMap, categoryColorScale, categoryIds } from '../roles/constants'
+import { platformEngineer, pointsToLevels } from '../roles/constants'
+import { categoryColorScale } from '../roles/role'
+
 import React from 'react'
-import type { MilestoneMap } from '../roles/constants'
 
 const margins = {
   top: 30,
@@ -13,7 +14,7 @@ const height = 150
 const width = 550
 
 interface Props {
-  milestoneByTrack: MilestoneMap
+  trackToMilestoneLevel: { [key: string]: number }
 }
 
 class LevelThermometer extends React.Component<Props> {
@@ -67,7 +68,7 @@ class LevelThermometer extends React.Component<Props> {
          + "z";
   }
   render() {
-    let categoryPoints = categoryPointsFromMilestoneMap(this.props.milestoneByTrack)
+    let categoryPoints = platformEngineer.categoryPointsFromMilestoneMap(this.props.trackToMilestoneLevel)
     let lastCategoryIndex = 0
     categoryPoints.forEach((categoryPoint, i) => {
       if (categoryPoint.points) lastCategoryIndex = i

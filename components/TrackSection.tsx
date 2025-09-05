@@ -1,10 +1,21 @@
-import { tracks, milestones, categoryColorScale } from '../roles/constants'
+// import { tracks, milestones, categoryColorScale } from '../roles/constants'
 import React from 'react'
+// import type { MilestoneMap, TrackId, Milestone } from '../roles/constants'
+import { platformEngineer, pointsToLevels } from '../roles/constants'
+import { categoryColorScale } from '../roles/role'
 
-class Track extends React.Component {
+const milestoneNumbers = [0, 1, 2, 3, 4, 5]
+
+interface Props {
+  trackToMilestoneLevel: { [key: string]: number }
+  trackId: string
+  handleTrackMilestoneChangeFn: (trackId: string, milestone: number) => void
+}
+
+class TrackSection extends React.Component<Props> {
   render() {
-    const track = tracks[this.props.trackId]
-    const currentMilestoneId = this.props.milestoneByTrack[this.props.trackId]
+    const track = platformEngineer.getTrackById(this.props.trackId)
+    const currentMilestoneId = this.props.trackToMilestoneLevel[this.props.trackId]
     const currentMilestone = track.milestones[currentMilestoneId - 1]
     return (
       <div className="track">
@@ -44,12 +55,12 @@ class Track extends React.Component {
         <div style={{display: 'flex'}}>
           <table style={{flex: 0, marginRight: 50}}>
             <tbody>
-              {milestones.slice().reverse().map((milestone) => {
+              {milestoneNumbers.slice().reverse().map((milestone) => {
                 const isMet = milestone <= currentMilestoneId
                 return (
                   <tr key={milestone}>
                     <td onClick={() => this.props.handleTrackMilestoneChangeFn(this.props.trackId, milestone)}
-                        style={{border: `4px solid ${milestone === currentMilestoneId ? '#000' : isMet ? categoryColorScale(track.category) : '#eee'}`, background: isMet ? categoryColorScale(track.category) : undefined}}>
+                        style={{border: `4px solid ${milestone === currentMilestoneId ? '#000' : isMet ? categoryColorScale(track.category) as string : '#eee'}`, background: isMet ? categoryColorScale(track.category) as string : undefined}}>
                       {milestone}
                     </td>
                   </tr>
@@ -66,12 +77,6 @@ class Track extends React.Component {
                   <li key={i}>{signal}</li>
                 ))}
               </ul>
-              <h4>Example tasks:</h4>
-              <ul>
-                {currentMilestone.examples.map((example, i) => (
-                  <li key={i}>{example}</li>
-                ))}
-              </ul>
             </div>
           ) : null}
         </div>
@@ -80,4 +85,4 @@ class Track extends React.Component {
   }
 }
 
-export default Track
+export default TrackSection

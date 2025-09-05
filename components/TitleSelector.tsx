@@ -1,16 +1,15 @@
 import React from 'react'
-import { eligibleTitles } from '../roles/constants'
-import type { MilestoneMap } from '../roles/constants'
+import { platformEngineer } from '../roles/constants'
 
 interface Props {
-  milestoneByTrack: MilestoneMap
+  trackToMilestoneLevel: { [key: string]: number }
   currentTitle: string
   setTitleFn: (title: string) => void
 }
 
 class TitleSelector extends React.Component<Props> {
   render() {
-    const titles = eligibleTitles(this.props.milestoneByTrack)
+    const titles = platformEngineer.eligibleTitlesCalculator(this.props.trackToMilestoneLevel)
     return <select value={this.props.currentTitle} onChange={e => this.props.setTitleFn(e.target.value)}>
       <style jsx>{`
         select {

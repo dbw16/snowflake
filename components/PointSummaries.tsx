@@ -1,14 +1,13 @@
-import { pointsToLevels, milestoneToPoints, trackIds, totalPointsFromMilestoneMap } from '../roles/constants'
-import type { MilestoneMap } from '../roles/constants'
+import { platformEngineer, pointsToLevels } from '../roles/constants'
 import React from 'react'
 
 interface Props {
-  milestoneByTrack: MilestoneMap
+  trackToMilestoneLevel: { [key: string]: number }
 }
 
 class PointSummaries extends React.Component<Props> {
   render() {
-    const totalPoints = totalPointsFromMilestoneMap(this.props.milestoneByTrack)
+    const totalPoints = platformEngineer.totalPointsFromMilestoneMap(this.props.trackToMilestoneLevel)
 
     let currentLevel: string, nextLevel: string
 
