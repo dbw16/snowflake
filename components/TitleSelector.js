@@ -1,14 +1,7 @@
 import React from 'react'
 import { eligibleTitles } from '../roles/constants'
-import type { MilestoneMap } from '../roles/constants'
 
-interface Props {
-  milestoneByTrack: MilestoneMap
-  currentTitle: string
-  setTitleFn: (title: string) => void
-}
-
-class TitleSelector extends React.Component<Props> {
+class TitleSelector extends React.Component {
   render() {
     const titles = eligibleTitles(this.props.milestoneByTrack)
     return <select value={this.props.currentTitle} onChange={e => this.props.setTitleFn(e.target.value)}>

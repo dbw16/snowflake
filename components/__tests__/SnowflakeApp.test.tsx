@@ -1,5 +1,5 @@
 import {hashToState , defaultState } from '../SnowflakeApp'
-import { trackIds } from '../../constants'
+import { trackIds } from '../../roles/constants'
 
 describe('hashToState', () => {
   it('should return null for empty hash', () => {

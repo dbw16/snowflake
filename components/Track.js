@@ -1,14 +1,7 @@
 import { tracks, milestones, categoryColorScale } from '../roles/constants'
 import React from 'react'
-import type { MilestoneMap, TrackId, Milestone } from '../roles/constants'
 
-interface Props {
-  milestoneByTrack: MilestoneMap
-  trackId: TrackId
-  handleTrackMilestoneChangeFn: (trackId: TrackId, milestone: Milestone) => void
-}
-
-class Track extends React.Component<Props> {
+class Track extends React.Component {
   render() {
     const track = tracks[this.props.trackId]
     const currentMilestoneId = this.props.milestoneByTrack[this.props.trackId]
@@ -55,8 +48,8 @@ class Track extends React.Component<Props> {
                 const isMet = milestone <= currentMilestoneId
                 return (
                   <tr key={milestone}>
-                    <td onClick={() => this.props.handleTrackMilestoneChangeFn(this.props.trackId, milestone as Milestone)}
-                        style={{border: `4px solid ${milestone === currentMilestoneId ? '#000' : isMet ? categoryColorScale(track.category) as string : '#eee'}`, background: isMet ? categoryColorScale(track.category) as string : undefined}}>
+                    <td onClick={() => this.props.handleTrackMilestoneChangeFn(this.props.trackId, milestone)}
+                        style={{border: `4px solid ${milestone === currentMilestoneId ? '#000' : isMet ? categoryColorScale(track.category) : '#eee'}`, background: isMet ? categoryColorScale(track.category) : undefined}}>
                       {milestone}
                     </td>
                   </tr>

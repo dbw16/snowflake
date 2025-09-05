@@ -1,24 +1,19 @@
 import { pointsToLevels, milestoneToPoints, trackIds, totalPointsFromMilestoneMap } from '../roles/constants'
-import type { MilestoneMap } from '../roles/constants'
 import React from 'react'
 
-interface Props {
-  milestoneByTrack: MilestoneMap
-}
-
-class PointSummaries extends React.Component<Props> {
+class PointSummaries extends React.Component {
   render() {
     const totalPoints = totalPointsFromMilestoneMap(this.props.milestoneByTrack)
 
-    let currentLevel: string, nextLevel: string
+    let currentLevel, nextLevel
 
     let pointsForCurrentLevel = totalPoints
-    while (!(currentLevel = (pointsToLevels as any)[pointsForCurrentLevel])) {
+    while (!(currentLevel = pointsToLevels[pointsForCurrentLevel])) {
       pointsForCurrentLevel--
     }
 
-    let pointsToNextLevel: number | string = 1
-    while (!(nextLevel = (pointsToLevels as any)[totalPoints + pointsToNextLevel])) {
+    let pointsToNextLevel = 1
+    while (!(nextLevel = pointsToLevels[totalPoints + pointsToNextLevel])) {
       pointsToNextLevel++
       if (pointsToNextLevel > 135) {
         pointsToNextLevel = 'N/A'
