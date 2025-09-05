@@ -1,5 +1,6 @@
 import React from 'react'
-import { trackIds, tracks, categoryColorScale, getTrackFromAnyRole } from '../constants'
+import { trackIds, tracks, getTrackFromAnyRole } from '../constants'
+import { categoryColorScale } from '../constants/common'
 import type { MilestoneMap, TrackId } from '../constants'
 
 interface Props {

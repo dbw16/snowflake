@@ -1,6 +1,7 @@
 import React from 'react'
 import * as d3 from 'd3'
-import { trackIds, milestones, tracks, categoryColorScale, getTrackFromAnyRole } from '../constants'
+import { trackIds, milestones, tracks, getTrackFromAnyRole } from '../constants'
+import { categoryColorScale } from '../constants/common'
 import type { TrackId, MilestoneMap } from '../constants'
 
 const width = 400

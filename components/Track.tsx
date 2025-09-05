@@ -1,4 +1,5 @@
-import { tracks, milestones, categoryColorScale, getTrackFromAnyRole } from '../constants'
+import { tracks, milestones, getTrackFromAnyRole } from '../constants'
+import { categoryColorScale } from '../constants/common'
 import React from 'react'
 import type { MilestoneMap, TrackId, Milestone } from '../constants'
 
