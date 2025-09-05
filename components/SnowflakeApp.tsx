@@ -162,8 +162,8 @@ class SnowflakeApp extends React.Component<Props, SnowflakeAppState> {
             text-decoration: none;
           }
         `}</style>
-        <div style={{margin: '19px auto 0', width: 142}}>
-          textt
+        <div style={{margin: '19px auto 0', width: 142, textAlign: 'center', fontSize: '24px', fontWeight: 'bold', color: '#333'}}>
+          Snowflake
         </div>
         <div style={{display: 'flex'}}>
           <div style={{flex: 1}}>
