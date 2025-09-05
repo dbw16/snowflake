@@ -1,5 +1,5 @@
 import React from 'react'
-import { trackIds, tracks, categoryColorScale } from '../constants'
+import { trackIds, tracks, categoryColorScale, getTrackFromAnyRole } from '../constants'
 import type { MilestoneMap, TrackId } from '../constants'
 
 interface Props {
@@ -40,14 +40,14 @@ class TrackSelector extends React.Component<Props> {
           <tr>
             {trackIds.map(trackId => (
               <td key={trackId} className="track-selector-label" onClick={() => this.props.setFocusedTrackIdFn(trackId)}>
-                {tracks[trackId].displayName}
+                {getTrackFromAnyRole(trackId).displayName}
               </td>
             ))}
           </tr>
           <tr>
             {trackIds.map(trackId => (
               <td key={trackId} className="track-selector-value"
-                  style={{border: '4px solid ' + (trackId == this.props.focusedTrackId ? '#000': categoryColorScale(tracks[trackId].category) as string), background: categoryColorScale(tracks[trackId].category) as string}}
+                  style={{border: '4px solid ' + (trackId == this.props.focusedTrackId ? '#000': categoryColorScale(getTrackFromAnyRole(trackId).category) as string), background: categoryColorScale(getTrackFromAnyRole(trackId).category) as string}}
                   onClick={() => this.props.setFocusedTrackIdFn(trackId)}>
                 {this.props.milestoneByTrack[trackId]}
               </td>

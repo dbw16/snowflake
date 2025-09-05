@@ -1,6 +1,6 @@
 import React from 'react'
 import * as d3 from 'd3'
-import { trackIds, milestones, tracks, categoryColorScale } from '../constants'
+import { trackIds, milestones, tracks, categoryColorScale, getTrackFromAnyRole } from '../constants'
 import type { TrackId, MilestoneMap } from '../constants'
 
 const width = 400
@@ -38,7 +38,7 @@ class NightingaleChart extends React.Component<Props> {
   }
 
   render() {
-    const currentMilestoneId = this.props.milestoneByTrack[this.props.focusedTrackId]
+    const currentMilestoneId = this.props.milestoneByTrack[this.props.focusedTrackId] || 0
     return (
       <figure>
         <style jsx>{`
@@ -66,20 +66,20 @@ class NightingaleChart extends React.Component<Props> {
                 <g key={trackId} transform={`rotate(${i * 360 / trackIds.length})`}>
                   {arcMilestones.map((milestone) => {
                     const isCurrentMilestone = isCurrentTrack && milestone == currentMilestoneId
-                    const isMet = this.props.milestoneByTrack[trackId] >= milestone || milestone == 0
+                    const isMet = (this.props.milestoneByTrack[trackId] || 0) >= milestone || milestone == 0
                     return (
                       <path
                           key={milestone}
                           className={'track-milestone ' + (isMet ? 'is-met ' : ' ') + (isCurrentMilestone ? 'track-milestone-current' : '')}
                           d={this.arcFn(milestone.toString())}
-                          style={{fill: isMet ? categoryColorScale(tracks[trackId].category) as string : undefined}} />
+                          style={{fill: isMet ? categoryColorScale(getTrackFromAnyRole(trackId).category) as string : undefined}} />
                     )
                   })}
                   <circle
                       r="8"
                       cx="0"
                       cy="-50"
-                      style={{fill: categoryColorScale(tracks[trackId].category) as string}}
+                      style={{fill: categoryColorScale(getTrackFromAnyRole(trackId).category) as string}}
                       className={"track-milestone " + (isCurrentTrack && !currentMilestoneId ? "track-milestone-current" : "")} />
                 </g>
             )})}

@@ -212,7 +212,7 @@ class SnowflakeApp extends React.Component<Props, SnowflakeAppState> {
   }
 
   shiftFocusedTrackMilestoneByDelta(delta: number) {
-    let prevMilestone = this.state.milestoneByTrack[this.state.focusedTrackId]
+    let prevMilestone = this.state.milestoneByTrack[this.state.focusedTrackId] || 0
     let milestone = prevMilestone + delta
     if (milestone < 0) milestone = 0
     if (milestone > 5) milestone = 5

@@ -1,13 +1,27 @@
 import * as d3 from 'd3'
 
-export type TrackId = 'MOBILE' | 'WEB_CLIENT' | 'FOUNDATIONS' | 'SERVERS' |
+export type RoleId = 'engineering' | 'cook' | 'cleaner'
+
+export type EngineeringTrackId = 'MOBILE' | 'WEB_CLIENT' | 'FOUNDATIONS' | 'SERVERS' |
   'PROJECT_MANAGEMENT' | 'COMMUNICATION' | 'CRAFT' | 'INITIATIVE' |
   'CAREER_DEVELOPMENT' | 'ORG_DESIGN' | 'WELLBEING' | 'ACCOMPLISHMENT' |
   'MENTORSHIP' | 'EVANGELISM' | 'RECRUITING' | 'COMMUNITY'
 
+export type CookTrackId = 'CULINARY_SKILLS' | 'FOOD_SAFETY' | 'MENU_PLANNING' | 'KITCHEN_MANAGEMENT' |
+  'PROJECT_MANAGEMENT' | 'COMMUNICATION' | 'CRAFT' | 'INITIATIVE' |
+  'CAREER_DEVELOPMENT' | 'ORG_DESIGN' | 'WELLBEING' | 'ACCOMPLISHMENT' |
+  'MENTORSHIP' | 'EVANGELISM' | 'RECRUITING' | 'COMMUNITY'
+
+export type CleanerTrackId = 'CLEANING_TECHNIQUES' | 'EQUIPMENT_MAINTENANCE' | 'SAFETY_PROTOCOLS' | 'EFFICIENCY' |
+  'PROJECT_MANAGEMENT' | 'COMMUNICATION' | 'CRAFT' | 'INITIATIVE' |
+  'CAREER_DEVELOPMENT' | 'ORG_DESIGN' | 'WELLBEING' | 'ACCOMPLISHMENT' |
+  'MENTORSHIP' | 'EVANGELISM' | 'RECRUITING' | 'COMMUNITY'
+
+export type TrackId = EngineeringTrackId | CookTrackId | CleanerTrackId
+
 export type Milestone = 0 | 1 | 2 | 3 | 4 | 5
 
-export type MilestoneMap = {
+export type EngineeringMilestoneMap = {
   'MOBILE': Milestone,
   'WEB_CLIENT': Milestone,
   'FOUNDATIONS': Milestone,
@@ -25,6 +39,46 @@ export type MilestoneMap = {
   'RECRUITING': Milestone,
   'COMMUNITY': Milestone
 }
+
+export type CookMilestoneMap = {
+  'CULINARY_SKILLS': Milestone,
+  'FOOD_SAFETY': Milestone,
+  'MENU_PLANNING': Milestone,
+  'KITCHEN_MANAGEMENT': Milestone,
+  'PROJECT_MANAGEMENT': Milestone,
+  'COMMUNICATION': Milestone,
+  'CRAFT': Milestone,
+  'INITIATIVE': Milestone,
+  'CAREER_DEVELOPMENT': Milestone,
+  'ORG_DESIGN': Milestone,
+  'WELLBEING': Milestone,
+  'ACCOMPLISHMENT': Milestone,
+  'MENTORSHIP': Milestone,
+  'EVANGELISM': Milestone,
+  'RECRUITING': Milestone,
+  'COMMUNITY': Milestone
+}
+
+export type CleanerMilestoneMap = {
+  'CLEANING_TECHNIQUES': Milestone,
+  'EQUIPMENT_MAINTENANCE': Milestone,
+  'SAFETY_PROTOCOLS': Milestone,
+  'EFFICIENCY': Milestone,
+  'PROJECT_MANAGEMENT': Milestone,
+  'COMMUNICATION': Milestone,
+  'CRAFT': Milestone,
+  'INITIATIVE': Milestone,
+  'CAREER_DEVELOPMENT': Milestone,
+  'ORG_DESIGN': Milestone,
+  'WELLBEING': Milestone,
+  'ACCOMPLISHMENT': Milestone,
+  'MENTORSHIP': Milestone,
+  'EVANGELISM': Milestone,
+  'RECRUITING': Milestone,
+  'COMMUNITY': Milestone
+}
+
+export type MilestoneMap = Partial<Record<TrackId, Milestone>>
 export const milestones = [0, 1, 2, 3, 4, 5]
 
 export const milestoneToPoints = (milestone: Milestone): number => {
@@ -70,7 +124,7 @@ export type Track = {
   }[]
 }
 
-type Tracks = {
+type EngineeringTracks = {
   'MOBILE': Track,
   'WEB_CLIENT': Track,
   'FOUNDATIONS': Track,
@@ -89,7 +143,45 @@ type Tracks = {
   'COMMUNITY': Track
 }
 
-export const tracks: Tracks = {
+type CookTracks = {
+  'CULINARY_SKILLS': Track,
+  'FOOD_SAFETY': Track,
+  'MENU_PLANNING': Track,
+  'KITCHEN_MANAGEMENT': Track,
+  'PROJECT_MANAGEMENT': Track,
+  'COMMUNICATION': Track,
+  'CRAFT': Track,
+  'INITIATIVE': Track,
+  'CAREER_DEVELOPMENT': Track,
+  'ORG_DESIGN': Track,
+  'WELLBEING': Track,
+  'ACCOMPLISHMENT': Track,
+  'MENTORSHIP': Track,
+  'EVANGELISM': Track,
+  'RECRUITING': Track,
+  'COMMUNITY': Track
+}
+
+type CleanerTracks = {
+  'CLEANING_TECHNIQUES': Track,
+  'EQUIPMENT_MAINTENANCE': Track,
+  'SAFETY_PROTOCOLS': Track,
+  'EFFICIENCY': Track,
+  'PROJECT_MANAGEMENT': Track,
+  'COMMUNICATION': Track,
+  'CRAFT': Track,
+  'INITIATIVE': Track,
+  'CAREER_DEVELOPMENT': Track,
+  'ORG_DESIGN': Track,
+  'WELLBEING': Track,
+  'ACCOMPLISHMENT': Track,
+  'MENTORSHIP': Track,
+  'EVANGELISM': Track,
+  'RECRUITING': Track,
+  'COMMUNITY': Track
+}
+
+export const engineeringTracks: EngineeringTracks = {
   "MOBILE": {
     "displayName": "Mobile",
     "category": "A",
@@ -1163,18 +1255,928 @@ export const tracks: Tracks = {
   },
 }
 
+export const cookTracks: CookTracks = {
+  "CULINARY_SKILLS": {
+    "displayName": "Culinary Skills",
+    "category": "A",
+    "description": "Develops expertise in cooking techniques, flavor profiles, and culinary creativity",
+    "milestones": [{
+      "summary": "Works effectively with basic cooking techniques, following recipes and established procedures",
+      "signals": [
+        "Prepares simple dishes following standard recipes",
+        "Uses basic cooking techniques like sautéing, boiling, and grilling",
+        "Maintains cleanliness and organization while cooking",
+      ],
+      "examples": [
+        "Successfully prepared daily soup following recipe",
+        "Grilled burgers to proper temperature consistently",
+        "Prepared basic salads with proper ingredient prep",
+      ],
+    }, {
+      "summary": "Develops proficiency in intermediate techniques and begins to modify existing recipes",
+      "signals": [
+        "Adapts recipes based on available ingredients",
+        "Uses intermediate techniques like braising and roasting",
+        "Understands flavor pairing and seasoning principles",
+      ],
+      "examples": [
+        "Modified pasta recipe when out of specific ingredients",
+        "Successfully braised short ribs for special dinner",
+        "Created daily specials using seasonal ingredients",
+      ],
+    }, {
+      "summary": "Demonstrates advanced culinary skills and creates original recipes",
+      "signals": [
+        "Develops new recipes that become menu staples",
+        "Masters complex techniques like sauce making and pastry",
+        "Mentors junior cooks in technique development",
+      ],
+      "examples": [
+        "Created signature sauce that increased customer satisfaction",
+        "Developed weekly specials that drove increased sales",
+        "Taught new hires advanced knife skills and techniques",
+      ],
+    }, {
+      "summary": "Innovates cuisine and sets culinary direction for the kitchen",
+      "signals": [
+        "Develops seasonal menus that showcase culinary expertise",
+        "Introduces new cooking techniques and equipment",
+        "Creates dishes that establish the restaurant's reputation",
+      ],
+      "examples": [
+        "Designed farm-to-table menu that increased restaurant ratings",
+        "Implemented sous vide techniques that improved food quality",
+        "Created tasting menu that received local food critic praise",
+      ],
+    }, {
+      "summary": "Is recognized as a culinary expert and influences industry trends",
+      "signals": [
+        "Develops signature cooking style that influences other kitchens",
+        "Mentors other head cooks and contributes to culinary education",
+        "Creates innovative dishes that set industry standards",
+      ],
+      "examples": [
+        "Published cookbook featuring signature techniques",
+        "Judged culinary competitions and mentored upcoming chefs",
+        "Pioneered fusion techniques adopted by other restaurants",
+      ],
+    }],
+  },
+
+  "FOOD_SAFETY": {
+    "displayName": "Food Safety",
+    "category": "A",
+    "description": "Ensures safe food handling practices and maintains health standards",
+    "milestones": [{
+      "summary": "Follows basic food safety protocols and maintains personal hygiene standards",
+      "signals": [
+        "Consistently washes hands and uses proper sanitation",
+        "Maintains proper food storage temperatures",
+        "Follows FIFO (first in, first out) rotation principles",
+      ],
+      "examples": [
+        "Properly stored all perishables at correct temperatures",
+        "Maintained clean work station throughout shift",
+        "Correctly labeled and dated all food items",
+      ],
+    }, {
+      "summary": "Implements comprehensive food safety systems and identifies potential hazards",
+      "signals": [
+        "Conducts regular temperature checks and maintains logs",
+        "Identifies and corrects food safety violations",
+        "Trains others in proper food handling procedures",
+      ],
+      "examples": [
+        "Implemented daily temperature logging system",
+        "Identified cross-contamination risk and implemented solution",
+        "Trained new employees on allergen awareness",
+      ],
+    }, {
+      "summary": "Develops food safety protocols and ensures compliance across the kitchen",
+      "signals": [
+        "Creates HACCP plans and monitors critical control points",
+        "Conducts food safety audits and implements improvements",
+        "Manages food safety training programs",
+      ],
+      "examples": [
+        "Developed comprehensive allergen management system",
+        "Led kitchen through successful health department inspection",
+        "Created food safety training curriculum for all staff",
+      ],
+    }, {
+      "summary": "Establishes food safety culture and manages complex safety programs",
+      "signals": [
+        "Develops innovative food safety solutions for complex operations",
+        "Manages crisis response for food safety incidents",
+        "Establishes relationships with health inspectors and regulatory bodies",
+      ],
+      "examples": [
+        "Designed food safety protocols for multi-location operation",
+        "Successfully managed food recall incident with zero customer impact",
+        "Implemented technology solutions for real-time safety monitoring",
+      ],
+    }, {
+      "summary": "Sets industry standards for food safety and influences regulatory practices",
+      "signals": [
+        "Contributes to food safety regulations and best practices",
+        "Consults for other organizations on food safety implementation",
+        "Develops innovative food safety technologies or methods",
+      ],
+      "examples": [
+        "Served on advisory board for local health department",
+        "Developed food safety app adopted by multiple restaurants",
+        "Published research on food safety practices in industry journals",
+      ],
+    }],
+  },
+
+  "MENU_PLANNING": {
+    "displayName": "Menu Planning",
+    "category": "A",
+    "description": "Plans and designs menus that balance customer appeal, cost effectiveness, and operational efficiency",
+    "milestones": [{
+      "summary": "Assists with menu planning and understands basic costing principles",
+      "signals": [
+        "Calculates food costs for individual menu items",
+        "Suggests seasonal ingredient substitutions",
+        "Helps with portion control and recipe standardization",
+      ],
+      "examples": [
+        "Calculated accurate food costs for new appetizer",
+        "Suggested summer vegetables to replace winter items",
+        "Standardized recipe portions for consistency",
+      ],
+    }, {
+      "summary": "Plans balanced menus and manages food costs effectively",
+      "signals": [
+        "Designs daily specials based on available ingredients",
+        "Balances menu variety with kitchen capabilities",
+        "Monitors food waste and adjusts ordering accordingly",
+      ],
+      "examples": [
+        "Created weekly specials that reduced food waste by 15%",
+        "Designed lunch menu that improved kitchen efficiency",
+        "Implemented portion control that maintained food costs under 30%",
+      ],
+    }, {
+      "summary": "Develops comprehensive menu strategies and manages complex food operations",
+      "signals": [
+        "Creates seasonal menus that drive customer traffic",
+        "Manages supplier relationships and negotiates pricing",
+        "Designs menus that optimize kitchen workflow",
+      ],
+      "examples": [
+        "Developed fall menu that increased revenue by 20%",
+        "Negotiated supplier contracts that reduced food costs by 10%",
+        "Redesigned menu layout to improve kitchen efficiency",
+      ],
+    }, {
+      "summary": "Creates innovative menu concepts and manages large-scale food operations",
+      "signals": [
+        "Develops menu concepts that differentiate the restaurant",
+        "Manages complex dietary restrictions and allergen considerations",
+        "Creates scalable menu systems for multiple locations",
+      ],
+      "examples": [
+        "Developed plant-based menu that attracted new customer base",
+        "Created comprehensive allergen-free menu options",
+        "Designed standardized menu system for restaurant chain",
+      ],
+    }, {
+      "summary": "Sets industry trends in menu development and influences culinary direction",
+      "signals": [
+        "Creates menu concepts that influence industry trends",
+        "Develops innovative approaches to sustainable menu planning",
+        "Mentors other culinary professionals in menu development",
+      ],
+      "examples": [
+        "Pioneered zero-waste menu concept adopted industry-wide",
+        "Developed sustainable sourcing practices copied by competitors",
+        "Created culinary education program for menu planning",
+      ],
+    }],
+  },
+
+  "KITCHEN_MANAGEMENT": {
+    "displayName": "Kitchen Management",
+    "category": "A",
+    "description": "Manages kitchen operations, staff, and workflow to ensure efficient service",
+    "milestones": [{
+      "summary": "Effectively manages individual station and supports team operations",
+      "signals": [
+        "Maintains clean and organized work station",
+        "Communicates effectively with team during service",
+        "Manages time to meet service deadlines",
+      ],
+      "examples": [
+        "Consistently maintained grill station during busy service",
+        "Communicated order status clearly to expediter",
+        "Completed prep work on time for evening service",
+      ],
+    }, {
+      "summary": "Coordinates multiple stations and manages kitchen workflow",
+      "signals": [
+        "Coordinates timing between different kitchen stations",
+        "Manages inventory and ordering for the kitchen",
+        "Trains new kitchen staff on procedures",
+      ],
+      "examples": [
+        "Synchronized appetizer and entree timing for large parties",
+        "Implemented inventory system that reduced waste",
+        "Trained three new cooks on kitchen procedures",
+      ],
+    }, {
+      "summary": "Manages complete kitchen operations and leads kitchen team",
+      "signals": [
+        "Oversees all kitchen stations during service",
+        "Manages kitchen staff schedules and performance",
+        "Implements systems to improve kitchen efficiency",
+      ],
+      "examples": [
+        "Led kitchen team through record-breaking service night",
+        "Implemented cross-training program that improved flexibility",
+        "Reduced average ticket time by 20% through workflow improvements",
+      ],
+    }, {
+      "summary": "Manages complex kitchen operations and develops kitchen systems",
+      "signals": [
+        "Designs kitchen layouts and workflow systems",
+        "Manages large kitchen teams across multiple shifts",
+        "Implements technology solutions for kitchen management",
+      ],
+      "examples": [
+        "Redesigned kitchen layout that improved efficiency by 30%",
+        "Managed kitchen team of 15+ across three shifts",
+        "Implemented POS integration that reduced order errors",
+      ],
+    }, {
+      "summary": "Sets standards for kitchen management and influences industry practices",
+      "signals": [
+        "Develops innovative kitchen management systems",
+        "Mentors other kitchen managers and culinary leaders",
+        "Creates scalable systems for large culinary operations",
+      ],
+      "examples": [
+        "Developed kitchen management software used by multiple restaurants",
+        "Consulted for restaurant group on kitchen operations",
+        "Created training program for culinary management certification",
+      ],
+    }],
+  },
+
+  "PROJECT_MANAGEMENT": {
+    "displayName": "Project management",
+    "category": "B",
+    "description": "Delivers well-scoped programs of work that meet their goals, on time, to budget, harmoniously",
+    "milestones": [{
+      "summary": "Effectively delivers individual tasks",
+      "signals": [
+        "Estimates small tasks accurately",
+        "Delivers tightly-scoped projects efficiently",
+        "Writes effective plans outlining approach",
+      ],
+      "examples": [
+        "Planned and executed special dinner menu for holiday event",
+        "Delivered catering order for 50 people on time and on budget",
+        "Organized kitchen prep schedule for busy weekend",
+      ],
+    }, {
+      "summary": "Effectively delivers small personal projects",
+      "signals": [
+        "Performs research and considers alternative approaches",
+        "Balances pragmatism and polish appropriately",
+        "Defines and hits interim milestones",
+      ],
+      "examples": [
+        "Planned and implemented new breakfast menu",
+        "Organized kitchen equipment upgrade project",
+        "Executed successful wine pairing dinner event",
+      ],
+    }, {
+      "summary": "Effectively delivers projects through a small team",
+      "signals": [
+        "Delegates tasks to others appropriately",
+        "Integrates business needs into project planning",
+        "Chooses appropriate project management strategy based on context",
+      ],
+      "examples": [
+        "Led team to implement new POS system in kitchen",
+        "Managed kitchen renovation project while maintaining service",
+        "Coordinated multi-course tasting menu with service team",
+      ],
+    }, {
+      "summary": "Effectively delivers projects through a large team, or with a significant amount of stakeholders or complexity",
+      "signals": [
+        "Finds ways to deliver requested scope faster, and prioritizes backlog",
+        "Manages dependencies on other projects and teams",
+        "Leverages recognition of repeated project patterns",
+      ],
+      "examples": [
+        "Managed kitchen operations during restaurant expansion",
+        "Led implementation of new food safety protocols across multiple locations",
+        "Coordinated large catering events with multiple vendors",
+      ],
+    }, {
+      "summary": "Manages major company pushes delivered by multiple teams",
+      "signals": [
+        "Considers external constraints and business objectives when planning",
+        "Leads teams of teams, and coordinates effective cross-functional collaboration",
+        "Owns a key company metric",
+      ],
+      "examples": [
+        "Led restaurant group's menu standardization project",
+        "Managed opening of multiple new restaurant locations",
+        "Delivered multi-month kitchen modernization project on time",
+      ],
+    }],
+  },
+
+  "COMMUNICATION": {
+    "displayName": "Communication",
+    "category": "B",
+    "description": "Shares the right amount of information with the right people, at the right time, and listens effectively",
+    "milestones": [{
+      "summary": "Communicates effectively to close stakeholders when called upon, and incorporates constructive feedback",
+      "signals": [
+        "Communicates order status clearly and effectively",
+        "Collaborates with others with empathy",
+        "Asks for help at the appropriate juncture",
+      ],
+      "examples": [
+        "Updated service team about special dietary modifications",
+        "Communicated kitchen delays to front of house promptly",
+        "Asked for assistance during unexpected rush period",
+      ],
+    }, {
+      "summary": "Communicates with the wider team appropriately, focusing on timeliness and good quality conversations",
+      "signals": [
+        "Practises active listening and suspension of attention",
+        "Ensures stakeholders are aware of current blockers",
+        "Chooses the appropriate tools for accurate and timely communication",
+      ],
+      "examples": [
+        "Received and integrated feedback from service staff positively",
+        "Created clear communication system for special orders",
+        "Consulted with suppliers before making menu changes",
+      ],
+    }, {
+      "summary": "Proactively shares information, actively solicits feedback, and facilitates communication for multiple stakeholders",
+      "signals": [
+        "Resolves communication difficulties between others",
+        "Anticipates and shares schedule deviations in plenty of time",
+        "Manages project stakeholder expectations effectively",
+      ],
+      "examples": [
+        "Mediated conflict between kitchen and service staff effectively",
+        "Presented new menu items to management team",
+        "Gave notice of upcoming equipment maintenance to all staff",
+      ],
+    }, {
+      "summary": "Communicates complex ideas skillfully and with nuance, and establishes alignment within the wider organization",
+      "signals": [
+        "Communicates operational risk and tradeoffs skillfully and with nuance",
+        "Contextualizes and clarifies ambiguous direction and strategy for others",
+        "Negotiates resourcing compromises with other teams",
+      ],
+      "examples": [
+        "Led staff meeting on new health safety protocols",
+        "Presented cost-benefit analysis of menu changes to ownership",
+        "Aligned kitchen and service teams around new service standards",
+      ],
+    }, {
+      "summary": "Influences outcomes at the highest level, moves beyond mere broadcasting, and sets best practices for others",
+      "signals": [
+        "Defines processes for clear communication for the entire team",
+        "Shares the right amount of information with the right people, at the right time",
+        "Develops and delivers plans to execs and stakeholders",
+      ],
+      "examples": [
+        "Created communication plan for major menu overhaul",
+        "Presented to board about kitchen operations and performance",
+        "Established communication standards for entire restaurant group",
+      ],
+    }],
+  },
+
+  "CRAFT": engineeringTracks.CRAFT,
+  "INITIATIVE": engineeringTracks.INITIATIVE,
+  "CAREER_DEVELOPMENT": engineeringTracks.CAREER_DEVELOPMENT,
+  "ORG_DESIGN": engineeringTracks.ORG_DESIGN,
+  "WELLBEING": engineeringTracks.WELLBEING,
+  "ACCOMPLISHMENT": engineeringTracks.ACCOMPLISHMENT,
+  "MENTORSHIP": engineeringTracks.MENTORSHIP,
+  "EVANGELISM": engineeringTracks.EVANGELISM,
+  "RECRUITING": engineeringTracks.RECRUITING,
+  "COMMUNITY": engineeringTracks.COMMUNITY
+}
+
+export const cleanerTracks: CleanerTracks = {
+  "CLEANING_TECHNIQUES": {
+    "displayName": "Cleaning Techniques",
+    "category": "A",
+    "description": "Develops expertise in cleaning methods, equipment operation, and maintaining hygiene standards",
+    "milestones": [{
+      "summary": "Works effectively with basic cleaning techniques, following established procedures",
+      "signals": [
+        "Uses cleaning equipment safely and correctly",
+        "Follows standard operating procedures for cleaning",
+        "Maintains clean and organized supply areas",
+      ],
+      "examples": [
+        "Properly operated vacuum cleaner on different surface types",
+        "Used appropriate cleaning chemicals for bathroom sanitization",
+        "Organized cleaning cart efficiently for daily rounds",
+      ],
+    }, {
+      "summary": "Develops proficiency in specialized cleaning techniques and equipment",
+      "signals": [
+        "Adapts cleaning approach based on surface type and contamination",
+        "Uses specialized equipment like floor buffers and carpet cleaners",
+        "Identifies and addresses different types of stains and damage",
+      ],
+      "examples": [
+        "Successfully removed coffee stains from office carpet",
+        "Used floor buffer to restore marble lobby floors",
+        "Adapted cleaning schedule for high-traffic areas",
+      ],
+    }, {
+      "summary": "Masters advanced cleaning techniques and trains others",
+      "signals": [
+        "Develops efficient cleaning workflows that save time",
+        "Troubleshoots equipment problems and performs maintenance",
+        "Trains new cleaning staff on proper techniques",
+      ],
+      "examples": [
+        "Created cleaning workflow that reduced time by 20%",
+        "Diagnosed and fixed buffer machine belt issue",
+        "Trained five new cleaners on infection control procedures",
+      ],
+    }, {
+      "summary": "Innovates cleaning processes and manages complex cleaning operations",
+      "signals": [
+        "Implements new cleaning technologies and methods",
+        "Designs cleaning protocols for specialized environments",
+        "Manages cleaning operations for large facilities",
+      ],
+      "examples": [
+        "Implemented UV sanitization system for healthcare facility",
+        "Developed cleanroom protocols for laboratory space",
+        "Managed cleaning operations for 500,000 sq ft facility",
+      ],
+    }, {
+      "summary": "Sets industry standards and influences cleaning practices",
+      "signals": [
+        "Develops innovative cleaning technologies or methods",
+        "Contributes to industry standards and best practices",
+        "Mentors cleaning professionals and contributes to education",
+      ],
+      "examples": [
+        "Developed eco-friendly cleaning product line",
+        "Served on committee for industry cleaning standards",
+        "Created certification program for professional cleaners",
+      ],
+    }],
+  },
+
+  "EQUIPMENT_MAINTENANCE": {
+    "displayName": "Equipment Maintenance",
+    "category": "A",
+    "description": "Maintains and repairs cleaning equipment to ensure optimal performance",
+    "milestones": [{
+      "summary": "Performs basic equipment maintenance and identifies issues",
+      "signals": [
+        "Conducts daily equipment inspections",
+        "Performs routine maintenance like filter changes",
+        "Reports equipment problems promptly",
+      ],
+      "examples": [
+        "Changed vacuum filters according to schedule",
+        "Identified frayed cord on floor buffer before use",
+        "Maintained cleaning supply inventory accurately",
+      ],
+    }, {
+      "summary": "Troubleshoots equipment problems and performs repairs",
+      "signals": [
+        "Diagnoses common equipment malfunctions",
+        "Performs minor repairs and part replacements",
+        "Maintains equipment service records",
+      ],
+      "examples": [
+        "Replaced worn belts on carpet cleaning machine",
+        "Fixed clogged hose on industrial vacuum",
+        "Maintained detailed service log for all equipment",
+      ],
+    }, {
+      "summary": "Manages equipment lifecycle and procurement",
+      "signals": [
+        "Evaluates equipment performance and recommends replacements",
+        "Researches new equipment options and technologies",
+        "Manages equipment budgets and purchasing decisions",
+      ],
+      "examples": [
+        "Recommended replacement of aging floor scrubber",
+        "Evaluated robotic vacuum options for overnight cleaning",
+        "Managed $50K annual equipment budget effectively",
+      ],
+    }, {
+      "summary": "Designs equipment systems and manages large equipment programs",
+      "signals": [
+        "Designs equipment specifications for large facilities",
+        "Manages vendor relationships and service contracts",
+        "Implements predictive maintenance programs",
+      ],
+      "examples": [
+        "Specified equipment package for new office building",
+        "Negotiated service contracts saving 25% annually",
+        "Implemented IoT monitoring for equipment performance",
+      ],
+    }, {
+      "summary": "Innovates equipment solutions and influences industry practices",
+      "signals": [
+        "Develops custom equipment solutions for unique needs",
+        "Contributes to equipment design and development",
+        "Shares expertise through industry publications and conferences",
+      ],
+      "examples": [
+        "Designed custom cleaning robot for hospital environment",
+        "Consulted with manufacturer on equipment improvements",
+        "Published research on equipment efficiency optimization",
+      ],
+    }],
+  },
+
+  "SAFETY_PROTOCOLS": {
+    "displayName": "Safety Protocols",
+    "category": "A",
+    "description": "Ensures safe working practices and maintains health and safety standards",
+    "milestones": [{
+      "summary": "Follows basic safety protocols and uses personal protective equipment",
+      "signals": [
+        "Consistently uses appropriate PPE",
+        "Follows lockout/tagout procedures",
+        "Reports safety hazards promptly",
+      ],
+      "examples": [
+        "Wore proper gloves when handling cleaning chemicals",
+        "Placed wet floor signs in all appropriate areas",
+        "Reported broken handrail to maintenance immediately",
+      ],
+    }, {
+      "summary": "Implements comprehensive safety systems and trains others",
+      "signals": [
+        "Conducts safety training for new employees",
+        "Performs regular safety audits and inspections",
+        "Maintains safety documentation and records",
+      ],
+      "examples": [
+        "Trained team on chemical safety and SDS procedures",
+        "Conducted monthly safety walks with supervisor",
+        "Maintained accurate injury and incident logs",
+      ],
+    }, {
+      "summary": "Develops safety programs and ensures regulatory compliance",
+      "signals": [
+        "Creates safety protocols for new work environments",
+        "Ensures compliance with OSHA and local regulations",
+        "Manages safety incident investigations",
+      ],
+      "examples": [
+        "Developed COVID-19 safety protocols for office cleaning",
+        "Led successful OSHA inspection with zero violations",
+        "Investigated slip and fall incident and implemented improvements",
+      ],
+    }, {
+      "summary": "Manages complex safety programs and crisis response",
+      "signals": [
+        "Develops safety programs for high-risk environments",
+        "Manages emergency response procedures",
+        "Coordinates with regulatory agencies",
+      ],
+      "examples": [
+        "Created safety program for hospital infectious disease areas",
+        "Managed response to chemical spill incident",
+        "Coordinated with health department during norovirus outbreak",
+      ],
+    }, {
+      "summary": "Sets safety standards and influences regulatory practices",
+      "signals": [
+        "Contributes to safety regulations and industry standards",
+        "Develops innovative safety solutions",
+        "Mentors safety professionals across organizations",
+      ],
+      "examples": [
+        "Served on advisory committee for cleaning safety standards",
+        "Developed safety app adopted by multiple cleaning companies",
+        "Created safety certification program for industry",
+      ],
+    }],
+  },
+
+  "EFFICIENCY": {
+    "displayName": "Efficiency",
+    "category": "A",
+    "description": "Optimizes cleaning operations for maximum productivity and cost effectiveness",
+    "milestones": [{
+      "summary": "Works efficiently and meets productivity standards",
+      "signals": [
+        "Completes assigned areas within time standards",
+        "Uses time and motion efficiently",
+        "Minimizes waste of supplies and materials",
+      ],
+      "examples": [
+        "Cleaned 20 offices consistently within 4-hour shift",
+        "Reduced supply usage by 15% through careful application",
+        "Optimized cart setup to reduce walking time",
+      ],
+    }, {
+      "summary": "Improves processes and helps others increase efficiency",
+      "signals": [
+        "Identifies bottlenecks and suggests improvements",
+        "Shares efficiency tips with team members",
+        "Adapts to changing priorities and urgent requests",
+      ],
+      "examples": [
+        "Suggested route changes that saved 30 minutes daily",
+        "Taught team efficient bathroom cleaning sequence",
+        "Quickly pivoted to urgent conference room setup",
+      ],
+    }, {
+      "summary": "Designs efficient workflows and manages team productivity",
+      "signals": [
+        "Creates cleaning schedules that optimize productivity",
+        "Implements quality control systems",
+        "Manages team performance and provides feedback",
+      ],
+      "examples": [
+        "Designed rotation schedule that improved coverage",
+        "Implemented checklist system that reduced missed items",
+        "Improved team efficiency by 25% through better coordination",
+      ],
+    }, {
+      "summary": "Optimizes large-scale operations and implements technology",
+      "signals": [
+        "Uses data to optimize cleaning operations",
+        "Implements technology solutions for efficiency",
+        "Manages complex multi-site operations",
+      ],
+      "examples": [
+        "Used sensors to optimize cleaning schedules based on usage",
+        "Implemented mobile app for real-time task management",
+        "Coordinated cleaning for 10 office buildings efficiently",
+      ],
+    }, {
+      "summary": "Innovates efficiency solutions and sets industry benchmarks",
+      "signals": [
+        "Develops innovative efficiency methodologies",
+        "Creates industry benchmarks and best practices",
+        "Consults on operational efficiency for other organizations",
+      ],
+      "examples": [
+        "Developed lean cleaning methodology adopted industry-wide",
+        "Created efficiency metrics used as industry standard",
+        "Consulted for Fortune 500 companies on cleaning efficiency",
+      ],
+    }],
+  },
+
+  "PROJECT_MANAGEMENT": {
+    "displayName": "Project management",
+    "category": "B",
+    "description": "Delivers well-scoped programs of work that meet their goals, on time, to budget, harmoniously",
+    "milestones": [{
+      "summary": "Effectively delivers individual tasks",
+      "signals": [
+        "Estimates cleaning tasks accurately",
+        "Completes projects efficiently",
+        "Creates effective work plans",
+      ],
+      "examples": [
+        "Planned and executed deep cleaning of executive offices",
+        "Completed carpet cleaning project for entire floor on schedule",
+        "Organized supplies and schedule for conference room setup",
+      ],
+    }, {
+      "summary": "Effectively delivers small cleaning projects",
+      "signals": [
+        "Coordinates multiple cleaning activities",
+        "Balances quality and efficiency appropriately",
+        "Manages project timelines and milestones",
+      ],
+      "examples": [
+        "Managed post-construction cleanup project",
+        "Coordinated window cleaning for entire building",
+        "Led seasonal deep cleaning initiative",
+      ],
+    }, {
+      "summary": "Effectively delivers projects through a small team",
+      "signals": [
+        "Delegates tasks to team members appropriately",
+        "Integrates client needs into project planning",
+        "Manages team coordination and communication",
+      ],
+      "examples": [
+        "Led team through office relocation cleaning project",
+        "Managed cleaning during office renovation",
+        "Coordinated event cleanup with catering team",
+      ],
+    }, {
+      "summary": "Effectively delivers complex projects with multiple stakeholders",
+      "signals": [
+        "Manages dependencies between different teams",
+        "Coordinates with facility management and contractors",
+        "Prioritizes competing demands effectively",
+      ],
+      "examples": [
+        "Managed cleaning during major office construction",
+        "Coordinated with IT, security, and maintenance teams",
+        "Led cleaning for company-wide event with 1000+ attendees",
+      ],
+    }, {
+      "summary": "Manages major organizational cleaning initiatives",
+      "signals": [
+        "Leads company-wide cleaning standard improvements",
+        "Coordinates multi-site cleaning projects",
+        "Manages large budgets and resources",
+      ],
+      "examples": [
+        "Led implementation of green cleaning across all locations",
+        "Managed cleaning operations during company merger",
+        "Coordinated response to facility emergency situation",
+      ],
+    }],
+  },
+
+  "COMMUNICATION": {
+    "displayName": "Communication",
+    "category": "B",
+    "description": "Shares the right amount of information with the right people, at the right time, and listens effectively",
+    "milestones": [{
+      "summary": "Communicates effectively with immediate team and incorporates feedback",
+      "signals": [
+        "Reports cleaning status clearly",
+        "Responds to requests and feedback positively",
+        "Asks for help when needed",
+      ],
+      "examples": [
+        "Notified supervisor about spill requiring immediate attention",
+        "Received feedback about missed areas and improved performance",
+        "Asked for assistance with heavy equipment operation",
+      ],
+    }, {
+      "summary": "Communicates effectively with building occupants and broader team",
+      "signals": [
+        "Explains cleaning schedules and disruptions clearly",
+        "Responds to occupant requests professionally",
+        "Coordinates with other facility teams",
+      ],
+      "examples": [
+        "Explained temporary office closure for carpet cleaning",
+        "Coordinated with security for after-hours deep cleaning",
+        "Communicated equipment malfunction to maintenance team",
+      ],
+    }, {
+      "summary": "Facilitates communication between teams and manages stakeholder expectations",
+      "signals": [
+        "Mediates between cleaning team and building occupants",
+        "Provides regular status updates to management",
+        "Manages expectations during service disruptions",
+      ],
+      "examples": [
+        "Resolved conflict between cleaning schedule and meeting needs",
+        "Presented monthly cleaning performance report to facility manager",
+        "Communicated impact of supply shortage to all stakeholders",
+      ],
+    }, {
+      "summary": "Communicates complex operational information and builds alignment",
+      "signals": [
+        "Explains cleaning operations to non-technical stakeholders",
+        "Negotiates cleaning schedules with multiple departments",
+        "Presents recommendations to senior management",
+      ],
+      "examples": [
+        "Presented business case for new cleaning equipment to executives",
+        "Negotiated cleaning windows with 24/7 operations team",
+        "Aligned multiple departments on new cleaning protocols",
+      ],
+    }, {
+      "summary": "Sets communication standards and influences organizational practices",
+      "signals": [
+        "Establishes communication protocols for cleaning operations",
+        "Represents cleaning operations to external stakeholders",
+        "Develops communication training for cleaning staff",
+      ],
+      "examples": [
+        "Created communication standards for emergency cleaning response",
+        "Represented company at facility management industry conference",
+        "Developed customer service training for cleaning team",
+      ],
+    }],
+  },
+
+  "CRAFT": engineeringTracks.CRAFT,
+  "INITIATIVE": engineeringTracks.INITIATIVE,
+  "CAREER_DEVELOPMENT": engineeringTracks.CAREER_DEVELOPMENT,
+  "ORG_DESIGN": engineeringTracks.ORG_DESIGN,
+  "WELLBEING": engineeringTracks.WELLBEING,
+  "ACCOMPLISHMENT": engineeringTracks.ACCOMPLISHMENT,
+  "MENTORSHIP": engineeringTracks.MENTORSHIP,
+  "EVANGELISM": engineeringTracks.EVANGELISM,
+  "RECRUITING": engineeringTracks.RECRUITING,
+  "COMMUNITY": engineeringTracks.COMMUNITY
+}
+
+export type Role = {
+  id: RoleId
+  displayName: string
+  tracks: EngineeringTracks | CookTracks | CleanerTracks
+  trackIds: TrackId[]
+  titles: Array<{label: string, minPoints: number, maxPoints?: number}>
+}
+
+export const roles: Record<RoleId, Role> = {
+  engineering: {
+    id: 'engineering',
+    displayName: 'Engineering',
+    tracks: engineeringTracks,
+    trackIds: Object.keys(engineeringTracks) as EngineeringTrackId[],
+    titles: [
+      {label: 'Engineer I', minPoints: 0, maxPoints: 16},
+      {label: 'Engineer II', minPoints: 17, maxPoints: 35},
+      {label: 'Senior Engineer', minPoints: 36, maxPoints: 57},
+      {label: 'Group Lead', minPoints: 36, maxPoints: 57},
+      {label: 'Staff Engineer', minPoints: 58, maxPoints: 89},
+      {label: 'Senior Group Lead', minPoints: 58, maxPoints: 89},
+      {label: 'Principal Engineer', minPoints: 90},
+      {label: 'Director of Engineering', minPoints: 90}
+    ]
+  },
+  cook: {
+    id: 'cook',
+    displayName: 'Cook',
+    tracks: cookTracks,
+    trackIds: Object.keys(cookTracks) as CookTrackId[],
+    titles: [
+      {label: 'Cook I', minPoints: 0, maxPoints: 16},
+      {label: 'Cook II', minPoints: 17, maxPoints: 35},
+      {label: 'Senior Cook', minPoints: 36, maxPoints: 57},
+      {label: 'Lead Cook', minPoints: 36, maxPoints: 57},
+      {label: 'Sous Chef', minPoints: 58, maxPoints: 89},
+      {label: 'Senior Lead Cook', minPoints: 58, maxPoints: 89},
+      {label: 'Executive Chef', minPoints: 90},
+      {label: 'Culinary Director', minPoints: 90}
+    ]
+  },
+  cleaner: {
+    id: 'cleaner',
+    displayName: 'Cleaner',
+    tracks: cleanerTracks,
+    trackIds: Object.keys(cleanerTracks) as CleanerTrackId[],
+    titles: [
+      {label: 'Cleaner I', minPoints: 0, maxPoints: 16},
+      {label: 'Cleaner II', minPoints: 17, maxPoints: 35},
+      {label: 'Senior Cleaner', minPoints: 36, maxPoints: 57},
+      {label: 'Lead Cleaner', minPoints: 36, maxPoints: 57},
+      {label: 'Facility Specialist', minPoints: 58, maxPoints: 89},
+      {label: 'Senior Lead Cleaner', minPoints: 58, maxPoints: 89},
+      {label: 'Facility Manager', minPoints: 90},
+      {label: 'Director of Facilities', minPoints: 90}
+    ]
+  }
+}
+
+// Backward compatibility - default to engineering role
+export const tracks = engineeringTracks
+
+// Utility functions for role-based access
+export const getRoleFromTrackId = (trackId: TrackId): RoleId => {
+  if (Object.keys(engineeringTracks).includes(trackId)) return 'engineering'
+  if (Object.keys(cookTracks).includes(trackId)) return 'cook'
+  if (Object.keys(cleanerTracks).includes(trackId)) return 'cleaner'
+  return 'engineering' // default fallback
+}
+
+export const getTrackFromAnyRole = (trackId: TrackId): Track => {
+  const roleId = getRoleFromTrackId(trackId)
+  const roleTracks = roles[roleId].tracks as any
+  return roleTracks[trackId]
+}
+
+export const getCurrentRoleTracks = (roleId: RoleId) => {
+  return roles[roleId].tracks
+}
+
 export const trackIds: TrackId[] = Object.keys(tracks) as TrackId[]
 
 export const categoryIds: Set<string> = trackIds.reduce((set, trackId) => {
-  set.add(tracks[trackId].category)
+  set.add(getTrackFromAnyRole(trackId).category)
   return set
 }, new Set<string>())
 
 export const categoryPointsFromMilestoneMap = (milestoneMap: MilestoneMap) => {
   let pointsByCategory = new Map()
   trackIds.forEach((trackId) => {
-    const milestone = milestoneMap[trackId]
-    const categoryId = tracks[trackId].category
+    const milestone = milestoneMap[trackId] || 0
+    const categoryId = getTrackFromAnyRole(trackId).category
     let currentPoints = pointsByCategory.get(categoryId) || 0
     pointsByCategory.set(categoryId, currentPoints + milestoneToPoints(milestone))
   })
@@ -1185,7 +2187,7 @@ export const categoryPointsFromMilestoneMap = (milestoneMap: MilestoneMap) => {
 }
 
 export const totalPointsFromMilestoneMap = (milestoneMap: MilestoneMap): number =>
-  trackIds.map(trackId => milestoneToPoints(milestoneMap[trackId]))
+  trackIds.map(trackId => milestoneToPoints(milestoneMap[trackId] || 0))
     .reduce((sum, addend) => (sum + addend), 0)
 
 export const categoryColorScale = d3.scaleOrdinal()
