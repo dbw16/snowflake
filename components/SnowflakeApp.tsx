@@ -4,17 +4,19 @@ import TrackSelector from '../components/TrackSelector'
 import NightingaleChart from '../components/NightingaleChart'
 import Track from '../components/Track'
 import LevelThermometer from '../components/LevelThermometer'
-import { eligibleTitles, trackIds, milestones, milestoneToPoints } from '../constants'
+import { eligibleTitles, trackIds, milestones, milestoneToPoints, roles } from '../constants'
 import PointSummaries from '../components/PointSummaries'
-import type { Milestone, MilestoneMap, TrackId } from '../constants'
+import type { Milestone, MilestoneMap, TrackId, RoleId } from '../constants'
 import React from 'react'
 import TitleSelector from '../components/TitleSelector'
+import RoleSelector from '../components/RoleSelector'
 
 interface SnowflakeAppState {
   milestoneByTrack: MilestoneMap
   name: string
   title: string
   focusedTrackId: TrackId
+  roleId: RoleId
 }
 
 export const coerceMilestone = (value: number): Milestone => {
@@ -30,41 +32,50 @@ export const hashToState = (hash: string): SnowflakeAppState | null => {
   const hashValues = hash.replace(/^#/, '').split(',') // remove leading '#' and split by ','
   if (!hashValues || hashValues.length < 18) return null
 
-  trackIds.forEach((trackId, i) => {
-    result.milestoneByTrack[trackId] = coerceMilestone(Number(hashValues[i]))
+  // Get role (if provided, otherwise default to engineering)
+  const roleId = (hashValues[18] as RoleId) || 'engineering'
+  const role = roles[roleId]
+  result.roleId = roleId
+
+  // Parse milestones for the current role
+  role.trackIds.forEach((trackId, i) => {
+    if (hashValues[i] !== undefined) {
+      result.milestoneByTrack[trackId] = coerceMilestone(Number(hashValues[i]))
+    }
   })
+  
   if (hashValues[16]) result.name = decodeURI(hashValues[16])
   if (hashValues[17]) result.title = decodeURI(hashValues[17])
+  
+  // Set focused track to first track of the role
+  result.focusedTrackId = role.trackIds[0]
+  
   return result
 }
 
 export const emptyState = (): SnowflakeAppState => {
+  const roleId: RoleId = 'engineering'
+  const role = roles[roleId]
+  const milestoneByTrack: MilestoneMap = {}
+  
+  // Initialize all tracks for the role to 0
+  role.trackIds.forEach(trackId => {
+    milestoneByTrack[trackId] = 0
+  })
+
   return {
     name: '',
     title: '',
-    milestoneByTrack: {
-      'MOBILE': 0,
-      'WEB_CLIENT': 0,
-      'FOUNDATIONS': 0,
-      'SERVERS': 0,
-      'PROJECT_MANAGEMENT': 0,
-      'COMMUNICATION': 0,
-      'CRAFT': 0,
-      'INITIATIVE': 0,
-      'CAREER_DEVELOPMENT': 0,
-      'ORG_DESIGN': 0,
-      'WELLBEING': 0,
-      'ACCOMPLISHMENT': 0,
-      'MENTORSHIP': 0,
-      'EVANGELISM': 0,
-      'RECRUITING': 0,
-      'COMMUNITY': 0
-    },
-    focusedTrackId: 'MOBILE'
+    milestoneByTrack,
+    focusedTrackId: role.trackIds[0],
+    roleId
   }
 }
 
 export const defaultState = (): SnowflakeAppState => {
+  const roleId: RoleId = 'engineering'
+  const role = roles[roleId]
+  
   return {
     name: 'Cersei Lannister',
     title: 'Staff Engineer',
@@ -86,13 +97,16 @@ export const defaultState = (): SnowflakeAppState => {
       'RECRUITING': 3,
       'COMMUNITY': 0
     },
-    focusedTrackId: 'MOBILE'
+    focusedTrackId: 'MOBILE',
+    roleId
   }
 }
 
 const stateToHash = (state: SnowflakeAppState) => {
   if (!state || !state.milestoneByTrack) return null
-  const values = (trackIds.map(trackId => state.milestoneByTrack[trackId]) as any[]).concat(encodeURI(state.name), encodeURI(state.title))
+  const role = roles[state.roleId]
+  const values = (role.trackIds.map(trackId => state.milestoneByTrack[trackId] || 0) as any[])
+    .concat(encodeURI(state.name), encodeURI(state.title), state.roleId)
   return values.join(',')
 }
 
@@ -148,12 +162,15 @@ class SnowflakeApp extends React.Component<Props, SnowflakeAppState> {
             text-decoration: none;
           }
         `}</style>
-        <div style={{margin: '19px auto 0', width: 142}}>
-          textt
+        <div style={{margin: '19px auto 0', width: 142, textAlign: 'center', fontSize: '24px', fontWeight: 'bold', color: '#333'}}>
+          Snowflake
         </div>
         <div style={{display: 'flex'}}>
           <div style={{flex: 1}}>
             <form>
+              <RoleSelector
+                  currentRole={this.state.roleId}
+                  setRoleFn={(roleId) => this.setRole(roleId)} />
               <input
                   type="text"
                   className="name-input"
@@ -164,7 +181,8 @@ class SnowflakeApp extends React.Component<Props, SnowflakeAppState> {
               <TitleSelector
                   milestoneByTrack={this.state.milestoneByTrack}
                   currentTitle={this.state.title}
-                  setTitleFn={(title) => this.setTitle(title)} />
+                  setTitleFn={(title) => this.setTitle(title)}
+                  roleId={this.state.roleId} />
             </form>
             <PointSummaries milestoneByTrack={this.state.milestoneByTrack} />
             <LevelThermometer milestoneByTrack={this.state.milestoneByTrack} />
@@ -172,13 +190,15 @@ class SnowflakeApp extends React.Component<Props, SnowflakeAppState> {
           <div style={{flex: 0}}>
             <NightingaleChart
                 milestoneByTrack={this.state.milestoneByTrack}
-                focusedTrackId={this.state.focusedTrackId} />
+                focusedTrackId={this.state.focusedTrackId}
+                roleTrackIds={roles[this.state.roleId].trackIds} />
           </div>
         </div>
         <TrackSelector
             milestoneByTrack={this.state.milestoneByTrack}
             focusedTrackId={this.state.focusedTrackId}
-            setFocusedTrackIdFn={this.setFocusedTrackId.bind(this)} />
+            setFocusedTrackIdFn={this.setFocusedTrackId.bind(this)}
+            roleTrackIds={roles[this.state.roleId].trackIds} />
         <Track
             milestoneByTrack={this.state.milestoneByTrack}
             trackId={this.state.focusedTrackId}
@@ -192,37 +212,74 @@ class SnowflakeApp extends React.Component<Props, SnowflakeAppState> {
     const milestoneByTrack = this.state.milestoneByTrack
     milestoneByTrack[trackId] = milestone
 
-    const titles = eligibleTitles(milestoneByTrack)
+    const role = roles[this.state.roleId]
+    const totalPoints = this.getTotalPoints()
+    const titles = role.titles.filter(roleTitle => (roleTitle.minPoints === undefined || totalPoints >= roleTitle.minPoints)
+                                               && (roleTitle.maxPoints === undefined || totalPoints <= roleTitle.maxPoints))
+                        .map(roleTitle => roleTitle.label)
     const title = titles.indexOf(this.state.title) === -1 ? titles[0] : this.state.title
 
     this.setState({ milestoneByTrack, focusedTrackId: trackId, title })
   }
 
   shiftFocusedTrack(delta: number) {
-    let index = trackIds.indexOf(this.state.focusedTrackId)
-    index = (index + delta + trackIds.length) % trackIds.length
-    const focusedTrackId = trackIds[index]
+    const role = roles[this.state.roleId]
+    let index = role.trackIds.indexOf(this.state.focusedTrackId as any)
+    index = (index + delta + role.trackIds.length) % role.trackIds.length
+    const focusedTrackId = role.trackIds[index]
     this.setState({ focusedTrackId })
   }
 
   setFocusedTrackId(trackId: TrackId) {
-    let index = trackIds.indexOf(trackId)
-    const focusedTrackId = trackIds[index]
+    const role = roles[this.state.roleId]
+    let index = role.trackIds.indexOf(trackId as any)
+    const focusedTrackId = role.trackIds[index]
     this.setState({ focusedTrackId })
   }
 
   shiftFocusedTrackMilestoneByDelta(delta: number) {
-    let prevMilestone = this.state.milestoneByTrack[this.state.focusedTrackId]
+    let prevMilestone = this.state.milestoneByTrack[this.state.focusedTrackId] || 0
     let milestone = prevMilestone + delta
     if (milestone < 0) milestone = 0
     if (milestone > 5) milestone = 5
     this.handleTrackMilestoneChange(this.state.focusedTrackId, milestone as Milestone)
   }
 
+  setRole(roleId: RoleId) {
+    const role = roles[roleId]
+    const milestoneByTrack: MilestoneMap = {}
+    
+    // Initialize all tracks for the new role to 0
+    role.trackIds.forEach(trackId => {
+      milestoneByTrack[trackId] = 0
+    })
+
+    // Get eligible titles for the new role
+    const titles = role.titles.filter(title => (title.minPoints === undefined || 0 >= title.minPoints)
+                                            && (title.maxPoints === undefined || 0 <= title.maxPoints))
+    const title = titles.length > 0 ? titles[0].label : ''
+
+    this.setState({ 
+      roleId, 
+      milestoneByTrack, 
+      focusedTrackId: role.trackIds[0],
+      title
+    })
+  }
+
   setTitle(title: string) {
-    let titles = eligibleTitles(this.state.milestoneByTrack)
+    const role = roles[this.state.roleId]
+    let titles = role.titles.filter(roleTitle => (roleTitle.minPoints === undefined || this.getTotalPoints() >= roleTitle.minPoints)
+                                               && (roleTitle.maxPoints === undefined || this.getTotalPoints() <= roleTitle.maxPoints))
+                        .map(roleTitle => roleTitle.label)
     title = titles.indexOf(title) == -1 ? titles[0] : title
     this.setState({ title })
+  }
+
+  getTotalPoints(): number {
+    const role = roles[this.state.roleId]
+    return role.trackIds.map(trackId => milestoneToPoints(this.state.milestoneByTrack[trackId] || 0))
+      .reduce((sum, addend) => (sum + addend), 0)
   }
 }
 

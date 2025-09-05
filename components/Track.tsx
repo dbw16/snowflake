@@ -1,4 +1,5 @@
-import { tracks, milestones, categoryColorScale } from '../constants'
+import { tracks, milestones, getTrackFromAnyRole } from '../constants'
+import { categoryColorScale } from '../constants/common'
 import React from 'react'
 import type { MilestoneMap, TrackId, Milestone } from '../constants'
 
@@ -10,8 +11,8 @@ interface Props {
 
 class Track extends React.Component<Props> {
   render() {
-    const track = tracks[this.props.trackId]
-    const currentMilestoneId = this.props.milestoneByTrack[this.props.trackId]
+    const track = getTrackFromAnyRole(this.props.trackId)
+    const currentMilestoneId = this.props.milestoneByTrack[this.props.trackId] || 0
     const currentMilestone = track.milestones[currentMilestoneId - 1]
     return (
       <div className="track">

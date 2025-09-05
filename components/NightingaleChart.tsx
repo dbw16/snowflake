@@ -1,6 +1,7 @@
 import React from 'react'
 import * as d3 from 'd3'
-import { trackIds, milestones, tracks, categoryColorScale } from '../constants'
+import { trackIds, milestones, tracks, getTrackFromAnyRole } from '../constants'
+import { categoryColorScale } from '../constants/common'
 import type { TrackId, MilestoneMap } from '../constants'
 
 const width = 400
@@ -9,12 +10,12 @@ const arcMilestones = milestones.slice(1) // we'll draw the '0' milestone with a
 interface Props {
   milestoneByTrack: MilestoneMap
   focusedTrackId: TrackId
+  roleTrackIds: TrackId[]
 }
 
 class NightingaleChart extends React.Component<Props> {
   colorScale: any
   radiusScale: any
-  arcFn: any
 
   constructor(props: Props) {
     super(props)
@@ -26,19 +27,22 @@ class NightingaleChart extends React.Component<Props> {
       .domain(arcMilestones.map(String))
       .range([.15 * width, .45 * width])
       .paddingInner(0.1)
+  }
 
-    this.arcFn = d3.arc()
+  getArcFn() {
+    return d3.arc()
       .innerRadius((d: any) => this.radiusScale(d) || 0)
       .outerRadius((d: any) => (this.radiusScale(d) || 0) + this.radiusScale.bandwidth())
-      .startAngle(- Math.PI / trackIds.length)
-      .endAngle(Math.PI / trackIds.length)
+      .startAngle(- Math.PI / this.props.roleTrackIds.length)
+      .endAngle(Math.PI / this.props.roleTrackIds.length)
       .padAngle(Math.PI / 200)
       .padRadius(.45 * width)
       .cornerRadius(2)
   }
 
   render() {
-    const currentMilestoneId = this.props.milestoneByTrack[this.props.focusedTrackId]
+    const currentMilestoneId = this.props.milestoneByTrack[this.props.focusedTrackId] || 0
+    const arcFn = this.getArcFn()
     return (
       <figure>
         <style jsx>{`
@@ -60,26 +64,26 @@ class NightingaleChart extends React.Component<Props> {
         `}</style>
         <svg>
           <g transform={`translate(${width/2},${width/2}) rotate(-33.75)`}>
-            {trackIds.map((trackId, i) => {
+            {this.props.roleTrackIds.map((trackId, i) => {
               const isCurrentTrack = trackId == this.props.focusedTrackId
               return (
-                <g key={trackId} transform={`rotate(${i * 360 / trackIds.length})`}>
+                <g key={trackId} transform={`rotate(${i * 360 / this.props.roleTrackIds.length})`}>
                   {arcMilestones.map((milestone) => {
                     const isCurrentMilestone = isCurrentTrack && milestone == currentMilestoneId
-                    const isMet = this.props.milestoneByTrack[trackId] >= milestone || milestone == 0
+                    const isMet = (this.props.milestoneByTrack[trackId] || 0) >= milestone || milestone == 0
                     return (
                       <path
                           key={milestone}
                           className={'track-milestone ' + (isMet ? 'is-met ' : ' ') + (isCurrentMilestone ? 'track-milestone-current' : '')}
-                          d={this.arcFn(milestone.toString())}
-                          style={{fill: isMet ? categoryColorScale(tracks[trackId].category) as string : undefined}} />
+                          d={arcFn(milestone as any) as string}
+                          style={{fill: isMet ? categoryColorScale(getTrackFromAnyRole(trackId).category) as string : '#ccc'}} />
                     )
                   })}
                   <circle
                       r="8"
                       cx="0"
                       cy="-50"
-                      style={{fill: categoryColorScale(tracks[trackId].category) as string}}
+                      style={{fill: categoryColorScale(getTrackFromAnyRole(trackId).category) as string}}
                       className={"track-milestone " + (isCurrentTrack && !currentMilestoneId ? "track-milestone-current" : "")} />
                 </g>
             )})}
